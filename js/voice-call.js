@@ -30,6 +30,31 @@ class VoiceCallManager {
         this.initializeEventListeners();
     }
 
+    async requestMicrophonePermission() {
+        try {
+            // Request microphone access explicitly
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            // Stop the stream immediately as we only needed permission
+            stream.getTracks().forEach(track => track.stop());
+            
+            console.log('Microphone permission granted');
+            return true;
+        } catch (error) {
+            console.error('Microphone permission denied:', error);
+            
+            if (error.name === 'NotAllowedError') {
+                throw new Error('Microphone access denied by user');
+            } else if (error.name === 'NotFoundError') {
+                throw new Error('No microphone found on this device');
+            } else if (error.name === 'NotSupportedError') {
+                throw new Error('Microphone access not supported in this browser');
+            } else {
+                throw new Error('Failed to access microphone: ' + error.message);
+            }
+        }
+    }
+
     initializeEventListeners() {
         // Voice call button
         const voiceCallBtn = document.getElementById('voiceCallBtn');
@@ -66,6 +91,9 @@ class VoiceCallManager {
         try {
             console.log('Starting voice call...');
             
+            // Request microphone permission first
+            await this.requestMicrophonePermission();
+            
             // Show voice call modal
             const modal = document.getElementById('voiceCallModal');
             if (modal) {
@@ -90,12 +118,20 @@ class VoiceCallManager {
         } catch (error) {
             console.error('Failed to start voice call:', error);
             this.updateCallStatus('voice', 'Connection failed');
+            
+            // Show user-friendly error message
+            if (error.name === 'NotAllowedError' || error.message.includes('microphone')) {
+                alert('Microphone access is required for voice calls. Please allow microphone access and try again.');
+            }
         }
     }
 
     async startVideoCall() {
         try {
             console.log('Starting video call...');
+            
+            // Request microphone permission first
+            await this.requestMicrophonePermission();
             
             // Show video call modal
             const modal = document.getElementById('videoCallModal');
@@ -129,6 +165,11 @@ class VoiceCallManager {
         } catch (error) {
             console.error('Failed to start video call:', error);
             this.updateCallStatus('video', 'Connection failed');
+            
+            // Show user-friendly error message
+            if (error.name === 'NotAllowedError' || error.message.includes('microphone')) {
+                alert('Microphone access is required for video calls. Please allow microphone access and try again.');
+            }
         }
     }
 
