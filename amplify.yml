@@ -8,8 +8,8 @@ frontend:
     build:
       commands:
         - echo "Building the application..."
-        - echo "Copying production config..."
-        - cp js/config.production.js js/config.js
+        - echo "Generating production config with environment variables..."
+        - node build-config.js
         - echo "Build completed successfully"
     postBuild:
       commands:
