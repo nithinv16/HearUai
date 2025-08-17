@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HearUAI – Empathy Meets AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4b6e91;
+      --secondary-color: #6a8caf;
+      --accent-color: #e8f4f8;
+      --text-dark: #2c3e50;
+      --text-light: #7f8c8d;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --white: #ffffff;
+      --light-gray: #f8f9fa;
+      --border-color: #e9ecef;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-dark);
+      background: var(--light-gray);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header Styles */
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 4rem 0 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="80" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>');
+      animation: float 20s infinite linear;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+      100% { transform: translateY(0px); }
+    }
+
+    header h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    header p {
+      font-size: 1.4rem;
+      margin-bottom: 2rem;
+      font-weight: 300;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin: 2.5rem 0;
+      flex-wrap: wrap;
+    }
+    
+    .stat {
+      text-align: center;
+      color: white;
+    }
+    
+    .stat-number {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      font-weight: 500;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      border: none;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--white);
+      color: var(--primary-color);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-color);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 2px solid var(--white);
+    }
+
+    .btn-outline:hover {
+      background: var(--white);
+      color: var(--primary-color);
+    }
+
+    /* Navigation */
+    nav {
+      background: var(--primary-color);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 25px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    nav a:hover, nav a.active {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-1px);
+    }
+
+    /* Sections */
+    section {
+      padding: 5rem 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .section-header p {
+      font-size: 1.2rem;
+      color: var(--text-light);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border-color);
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    .card-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      color: white;
+      font-size: 2rem;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .card p {
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* Chat Interface */
+    .chat-demo {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2rem;
+      margin: 3rem auto;
+      max-width: 800px;
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      overflow: hidden;
+    }
+
+    .chat-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .chat-header::before {
+      content: '';
+      position: absolute;
+      top: -2rem;
+      left: -2rem;
+      right: -2rem;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(102, 126, 234, 0.05) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .avatar {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .chat-info h4 {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .chat-info p {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .chat-messages {
+      height: 400px;
+      overflow-y: auto;
+      padding: 1rem;
+      background: var(--light-gray);
+      border-radius: 15px;
+      margin-bottom: 1rem;
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message-content {
+      max-width: 75%;
+      padding: 1.2rem 1.8rem;
+      border-radius: 25px;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      position: relative;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .message.user .message-content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-bottom-right-radius: 8px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .message.ai .message-content {
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+      color: #333;
+      border-bottom-left-radius: 8px;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      box-shadow: 0 2px 12px rgba(102, 126, 234, 0.08);
+    }
+
+    .message.ai .message-content::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      bottom: 8px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 8px 8px 0;
+      border-color: transparent #f8f9ff transparent transparent;
+    }
+
+    .message.user .message-content::before {
+      content: '';
+      position: absolute;
+      right: -8px;
+      bottom: 8px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 0 8px 8px;
+      border-color: transparent transparent #667eea transparent;
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 1rem 1.5rem;
+      border: 2px solid var(--border-color);
+      border-radius: 25px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .chat-input input:focus {
+      border-color: var(--primary-color);
+    }
+
+    .chat-input button {
+      width: 50px;
+      height: 50px;
+      border: none;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chat-input button:hover {
+      background: var(--secondary-color);
+      transform: scale(1.05);
+    }
+
+    .voice-btn.listening {
+      background: var(--danger-color);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+      }
+    }
+
+    .settings-btn {
+      background: var(--text-light) !important;
+    }
+
+    .settings-btn:hover {
+      background: var(--text-dark) !important;
+    }
+
+    /* Settings Modal */
+    .settings-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .settings-content {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings-content h3 {
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .setting-item {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: var(--light-gray);
+      border-radius: 10px;
+    }
+
+    .setting-item label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .setting-item input[type="range"] {
+      flex: 1;
+      margin-left: 1rem;
+    }
+
+    .close-settings {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .close-settings:hover {
+      background: var(--secondary-color);
+    }
+
+    /* Footer */
+    footer {
+      background: var(--primary-color);
+      color: white;
+      text-align: center;
+      padding: 3rem 0;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .footer-section a {
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.5rem;
+      transition: color 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: white;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .social-links a:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    /* About Section Styles */
+    .about-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    
+    .about-text h3 {
+      color: #333;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+    }
+    
+    .about-text p {
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .features-list {
+      margin-top: 2.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .feature-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    }
+    
+    .feature-item i {
+      color: #667eea;
+      margin-right: 1rem;
+      font-size: 1.3rem;
+      min-width: 20px;
+    }
+    
+    .feature-item span {
+      font-weight: 500;
+      color: #333;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 2.5rem;
+      }
+
+      header p {
+        font-size: 1.2rem;
+      }
+
+      .cta-buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-demo {
+        margin: 2rem 1rem;
+        padding: 1.5rem;
+      }
+
+      .message-content {
+        max-width: 85%;
+      }
+    }
+
+    /* Loading Animation */
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      border-bottom-left-radius: 5px;
+      max-width: 70px;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--text-light);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+      }
+      30% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1><i class="fas fa-brain"></i> HearUAI</h1>
+      <p>Your AI Therapist & Trusted Companion</p>
+      <div class="hero-stats">
+         <div class="stat">
+           <span class="stat-number">2</span>
+           <span class="stat-label">Conversation Modes</span>
+         </div>
+         <div class="stat">
+           <span class="stat-number">6</span>
+           <span class="stat-label">Core Functions</span>
+         </div>
+         <div class="stat">
+           <span class="stat-number">∞</span>
+           <span class="stat-label">Memory Layers</span>
+         </div>
+       </div>
+      <div class="cta-buttons">
+        <a href="chat.html" class="btn btn-primary">
+           <i class="fas fa-comments"></i>
+           Experience HearUAI
+         </a>
+        <a href="#about" class="btn btn-outline">
+          <i class="fas fa-info-circle"></i>
+          Discover the Difference
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <div class="container">
+      <div class="nav-container">
+        <a href="#about"><i class="fas fa-heart"></i> About</a>
+        <a href="#features"><i class="fas fa-star"></i> Features</a>
+        <a href="#chat"><i class="fas fa-comments"></i> Try Demo</a>
+        <a href="memory.html"><i class="fas fa-brain"></i> Memory</a>
+        <a href="#market"><i class="fas fa-chart-line"></i> Market</a>
+        <a href="#team"><i class="fas fa-users"></i> Team</a>
+        <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2>About HearUAI</h2>
+        <p>More Than Just an AI - Your Emotional Companion</p>
+      </div>
+      <div class="about-content">
+        <div class="about-text">
+          <p>
+            HearUAI represents a breakthrough in AI therapy and companionship. Unlike traditional chatbots, 
+            HearUAI combines the clinical expertise of a licensed therapist with the emotional warmth of a trusted friend.
+          </p>
+          <p>
+            Our AI doesn't just respond to your words - it understands your emotions, remembers your journey, 
+            and adapts its personality to what you need most. Whether you're seeking structured therapy or just 
+            someone to talk to about your day, HearUAI is there with the perfect response, tone, and energy.
+          </p>
+        </div>
+        
+        <div class="features-list">
+          <div class="feature-item">
+            <i class="fas fa-brain"></i>
+            <span><strong>Dual-Mode Intelligence:</strong> Seamlessly switches between professional therapy sessions and friendly conversations</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-heart"></i>
+            <span><strong>Long-term Emotional Memory:</strong> Remembers your triggers, preferences, and progress over time</span>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-user-friends"></i>
+            <span><strong>Gender-Adaptive Personality:</strong> Adjusts communication style based on your preferences and mood</span>
+          </div>
+
+          <div class="feature-item">
+            <i class="fas fa-chart-line"></i>
+            <span><strong>Real-time Mood Detection:</strong> Analyzes your emotional state and responds appropriately</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="container">
+      <div class="section-header">
+        <h2>Beyond Traditional AI Therapy</h2>
+        <p>Six core functions that make HearUAI your most trusted companion</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <h3>Dual-Mode Intelligence</h3>
+          <p><strong>Therapy Mode:</strong> Structured CBT, DBT & ACT sessions with clinical precision.<br>
+          <strong>Friendly Mode:</strong> Natural companionship that initiates conversations and remembers what you love.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-journal-whills"></i>
+          </div>
+          <h3>Journaling Companion</h3>
+          <p>Proactive journaling prompts, thought pattern analysis, and emotional processing. Your AI companion helps you reflect and grow through guided self-discovery.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <h3>Behavioral Tracker</h3>
+          <p>Observes mood shifts, language patterns, and behavioral changes. Adapts responses in real-time based on your emotional state and progress.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-memory"></i>
+          </div>
+          <h3>Memory Manager</h3>
+          <p>Stores triggers, coping mechanisms, relationship dynamics, and personal preferences. Creates continuity across sessions for truly personalized care.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-target"></i>
+          </div>
+          <h3>Progress Coach</h3>
+          <p>Guides you toward emotional and behavioral goals with continuous encouragement, milestone tracking, and adaptive motivation strategies.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-film"></i>
+          </div>
+          <h3>Cultural Intelligence</h3>
+          <p>Quotes your favorite movies, books, and cultural references during therapy. Connects with your interests to make sessions more relatable and engaging.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="chat">
+    <div class="container">
+      <div class="section-header">
+        <h2>Try Our AI Therapist</h2>
+        <p>Experience compassionate AI-powered therapy in a safe, judgment-free environment</p>
+      </div>
+      <div class="cta-buttons">
+        <a href="chat.html" class="btn btn-primary">
+          <i class="fas fa-comments"></i>
+          Start Therapy Session
+        </a>
+        <a href="chat.html" class="btn btn-outline">
+          <i class="fas fa-heart"></i>
+          Friendly Chat Mode
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="market">
+    <div class="container">
+      <div class="section-header">
+        <h2>Market Opportunity & Traction</h2>
+        <p>Addressing the global mental health crisis with innovative AI solutions</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3>$400B+ Global Market</h3>
+          <p>Huge unmet need for accessible, scalable mental health solutions worldwide.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-cogs"></i>
+          </div>
+          <h3>Prototype Built</h3>
+          <p>Working MVP with real-time voice & avatar interaction successfully demoed.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+          <h3>Early Partnerships</h3>
+          <p>In talks with mental wellness apps & clinics to pilot B2B API integration.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-road"></i>
+          </div>
+          <h3>Roadmap</h3>
+          <p>Beta launch Q3 2025; multilingual support & hybrid AI+human therapy in 2026.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team">
+    <div class="container">
+      <div class="section-header">
+        <h2>Meet Our Team</h2>
+        <p>Passionate experts dedicated to revolutionizing mental health care</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h3>Nithin V Thomas</h3>
+          <p>Founder & CEO - Visionary leader with expertise in AI and mental health technology</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>AI Research Team</h3>
+          <p>Leading experts in natural language processing and emotional AI</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-user-md"></i>
+          </div>
+          <h3>Clinical Advisors</h3>
+          <p>Licensed therapists and psychologists ensuring clinical accuracy</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="container">
+      <div class="section-header">
+        <h2>Contact Us</h2>
+        <p>Interested in partnership, investing, or using HearUAI? Let's talk.</p>
+      </div>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <h3>Email</h3>
+          <p>contact@hearuai.com</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3>Website</h3>
+          <p>www.hearuai.com</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">
+            <i class="fab fa-linkedin"></i>
+          </div>
+          <h3>LinkedIn</h3>
+          <p>linkedin.com/company/hearuai</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>HearUAI</h4>
+          <p>Empathy Meets AI</p>
+          <p>Making mental health support accessible to everyone, everywhere.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="#about">About</a>
+          <a href="#features">Features</a>
+          <a href="#chat">Try Demo</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Help Center</a>
+          <a href="#">Crisis Resources</a>
+        </div>
+      </div>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+      </div>
+      <p style="margin-top: 2rem; opacity: 0.8;">&copy; 2025 HearUAI. All rights reserved.</p>
+    </div>
+  </footer>
+
+
+
+
+  
+  <script>
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Active navigation highlighting
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('nav a[href^="#"]');
+      
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (scrollY >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Chat initialization is handled by chat.js
+  </script>
+</body>
+</html>

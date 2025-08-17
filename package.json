@@ -1,0 +1,21 @@
+{
+  "name": "hearuai-proxy",
+  "version": "1.0.0",
+  "description": "Proxy server for HearuAI to handle Azure OpenAI API calls",
+  "main": "proxy-server.js",
+  "scripts": {
+    "start": "node proxy-server.js",
+    "dev": "nodemon proxy-server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["hearuai", "azure", "openai", "proxy"],
+  "author": "HearuAI Team",
+  "license": "MIT"
+}

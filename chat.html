@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with HearUAI - Your AI Therapist & Companion</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #667eea;
+      --secondary-color: #764ba2;
+      --text-dark: #333;
+      --text-light: #666;
+      --border-color: #e9ecef;
+      --white: #ffffff;
+      --light-bg: #f8f9fa;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 1rem;
+    }
+
+    .chat-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.1);
+      overflow: hidden;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      height: calc(100vh - 2rem);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .chat-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .chat-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .chat-info h3 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .chat-status {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .chat-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .user-greeting {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      margin-right: 1rem;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
+      background: #fafbfc;
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message-content {
+      max-width: 75%;
+      padding: 1.2rem 1.8rem;
+      border-radius: 25px;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      position: relative;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .message.user .message-content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-bottom-right-radius: 8px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .message.ai .message-content {
+      background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+      color: #333;
+      border-bottom-left-radius: 8px;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      box-shadow: 0 2px 12px rgba(102, 126, 234, 0.08);
+    }
+
+    .message.ai .message-content::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      bottom: 8px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 8px 8px 0;
+      border-color: transparent #f8f9ff transparent transparent;
+    }
+
+    .message.user .message-content::before {
+      content: '';
+      position: absolute;
+      right: -8px;
+      bottom: 8px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 0 8px 8px;
+      border-color: transparent transparent #667eea transparent;
+    }
+
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: #f8f9ff;
+      border-radius: 20px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .typing-dots {
+      display: flex;
+      gap: 0.3rem;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: #667eea;
+      border-radius: 50%;
+      animation: typingAnimation 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes typingAnimation {
+      0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+      }
+      30% {
+        transform: translateY(-10px);
+        opacity: 1;
+      }
+    }
+
+    .chat-input-container {
+      padding: 1.5rem;
+      background: white;
+      border-top: 1px solid #e9ecef;
+    }
+
+    .chat-input-wrapper {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+
+    .input-group {
+      flex: 1;
+      position: relative;
+    }
+
+    #messageInput {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border: 2px solid #e9ecef;
+      border-radius: 25px;
+      font-size: 1rem;
+      resize: none;
+      min-height: 50px;
+      max-height: 120px;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
+    }
+
+    #messageInput:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .input-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f8f9fa;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      z-index: 10;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Settings Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: #333;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #666;
+    }
+
+    .setting-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .setting-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .setting-group select,
+    .setting-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    .setting-group select:focus,
+    .setting-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      body {
+        padding: 0;
+      }
+
+      .chat-container {
+        height: 100vh;
+        border-radius: 0;
+      }
+
+      .chat-header {
+        padding: 1rem;
+      }
+
+      .chat-messages {
+        padding: 1rem;
+      }
+
+      .message-content {
+        max-width: 85%;
+        padding: 1rem 1.3rem;
+      }
+
+      .chat-input-container {
+        padding: 1rem;
+      }
+
+      .chat-input-wrapper {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .input-controls {
+        justify-content: center;
+      }
+
+      .back-btn {
+        position: relative;
+        top: auto;
+        left: auto;
+        margin-bottom: 1rem;
+      }
+    }
+
+
+
+
+
+
+    /* Reference Notification Styles */
+    .reference-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      z-index: 1000;
+      max-width: 350px;
+      animation: slideInRight 0.3s ease-out;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .reference-notification:hover {
+      transform: translateY(-2px);
+    }
+
+    .reference-notification.error {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    }
+
+    .reference-notification .notification-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .reference-notification .notification-body {
+      font-size: 0.9rem;
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+
+    .reference-notification .close-notification {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s ease;
+    }
+
+    .reference-notification .close-notification:hover {
+      opacity: 1;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
+    .reference-notification.removing {
+      animation: slideOutRight 0.3s ease-in;
+    }
+
+    /* Proactive Message Styles */
+    .message.proactive {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border: 2px solid rgba(240, 147, 251, 0.3);
+      animation: proactiveGlow 2s ease-in-out infinite alternate;
+    }
+
+    .message.proactive .message-content {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      position: relative;
+    }
+
+    .message.proactive .message-content::before {
+      content: '';
+      position: absolute;
+      left: -8px;
+      bottom: 8px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 0 8px 8px 0;
+      border-color: transparent #f5576c transparent transparent;
+    }
+
+    .message.proactive .message-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .message.proactive .message-header i {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes proactiveGlow {
+      0% {
+        box-shadow: 0 4px 15px rgba(240, 147, 251, 0.3);
+      }
+      100% {
+        box-shadow: 0 8px 25px rgba(240, 147, 251, 0.5);
+      }
+    }
+
+    /* Enhanced Settings Modal Styles */
+    .settings-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .settings-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .settings-content h3 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    .settings-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 15px;
+      border-left: 4px solid #667eea;
+    }
+
+    .settings-section h4 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .setting-item {
+      margin-bottom: 1rem;
+      padding: 1rem;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #e9ecef;
+    }
+
+    .setting-item label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .setting-item select,
+    .setting-item input[type="range"] {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .setting-item select {
+      background: white;
+      cursor: pointer;
+    }
+
+    .setting-item select:focus,
+    .setting-item input[type="range"]:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .range-value {
+      display: inline-block;
+      margin-left: 0.5rem;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .setting-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .setting-group .btn {
+      flex: 1;
+    }
+
+    .close-settings {
+      width: 100%;
+      padding: 0.75rem;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      margin-top: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .close-settings:hover {
+      background: #5a6fd8;
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #4caf50;
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1001;
+      animation: slideInRight 0.3s ease;
+    }
+
+    .notification.error {
+      background: #f44336;
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    /* Voice and Video Call Styles */
+    .call-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .call-interface {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 20px;
+      padding: 2rem;
+      text-align: center;
+      color: white;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .call-interface h3 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .call-status {
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .call-avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .call-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .call-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .call-btn.mute {
+      background: #ffc107;
+      color: white;
+    }
+
+    .call-btn.mute:hover {
+      background: #e0a800;
+    }
+
+    .call-btn.end {
+      background: #dc3545;
+      color: white;
+    }
+
+    .call-btn.end:hover {
+      background: #c82333;
+    }
+
+    .call-btn.speaker {
+      background: #28a745;
+      color: white;
+    }
+
+    .call-btn.speaker:hover {
+      background: #218838;
+    }
+
+    .video-call-interface {
+      max-width: 800px;
+      width: 95%;
+    }
+
+    .video-call-interface .call-avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 0 auto 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .call-transcript {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      max-height: 150px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .transcript-line {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 5px;
+    }
+
+    .transcript-line.user {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .transcript-line.ai {
+      background: rgba(102, 126, 234, 0.3);
+    }
+
+    .call-timer {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .call-btn.active {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <button class="back-btn" onclick="window.location.href='index.html'">
+    <i class="fas fa-arrow-left"></i>
+    Back to Home
+  </button>
+
+  <div class="chat-container">
+    <div class="chat-header">
+      <div class="chat-info">
+        <div>
+          <h3><i class="fas fa-brain"></i> HearUAI</h3>
+          <div class="chat-status">Your AI Therapist & Trusted Companion</div>
+        </div>
+      </div>
+      <div class="chat-controls">
+        <div class="user-greeting" id="userGreeting">
+          Welcome back!
+        </div>
+        <button class="btn-icon" id="memoryBtn" title="Memory Management" onclick="window.location.href='memory.html'">
+          <i class="fas fa-brain"></i>
+        </button>
+        <button class="btn-icon" id="voiceBtn" title="Voice Input">
+          <i class="fas fa-microphone"></i>
+        </button>
+        <button class="btn-icon" id="voiceCallBtn" title="Call HearUAI">
+          <i class="fas fa-phone"></i>
+        </button>
+        <button class="btn-icon" id="videoCallBtn" title="Video Call HearUAI">
+          <i class="fas fa-video"></i>
+        </button>
+        <button class="btn-icon" id="settingsBtn" title="Settings">
+          <i class="fas fa-cog"></i>
+        </button>
+        <button class="logout-btn" id="logoutBtn" title="Logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+
+
+
+    <!-- Voice Call Modal -->
+    <div class="call-modal" id="voiceCallModal" style="display: none;">
+      <div class="call-interface">
+        <h3><i class="fas fa-phone"></i> Voice Call with HearUAI</h3>
+        <div class="call-status" id="voiceCallStatus">Connecting...</div>
+        <div class="call-timer" id="voiceCallTimer">00:00</div>
+        
+        <div class="call-avatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        
+        <div class="call-transcript" id="voiceCallTranscript">
+          <div class="transcript-line ai">Hi! I'm ready to talk with you. How are you feeling today?</div>
+        </div>
+        
+        <div class="call-controls">
+          <button class="call-btn mute" id="voiceMuteBtn" title="Mute/Unmute">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button class="call-btn speaker" id="voiceSpeakerBtn" title="Speaker On/Off">
+            <i class="fas fa-volume-up"></i>
+          </button>
+          <button class="call-btn end" id="voiceEndBtn" title="End Call">
+            <i class="fas fa-phone-slash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Call Modal -->
+    <div class="call-modal" id="videoCallModal" style="display: none;">
+      <div class="call-interface video-call-interface">
+        <h3><i class="fas fa-video"></i> Video Call with HearUAI</h3>
+        <div class="call-status" id="videoCallStatus">Connecting...</div>
+        <div class="call-timer" id="videoCallTimer">00:00</div>
+        
+        <div class="call-avatar" id="videoCallAvatar">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        
+        <div class="call-transcript" id="videoCallTranscript">
+          <div class="transcript-line ai">Hello! I'm excited to see you today. How can I help you?</div>
+        </div>
+        
+        <div class="call-controls">
+          <button class="call-btn mute" id="videoMuteBtn" title="Mute/Unmute">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button class="call-btn speaker" id="videoSpeakerBtn" title="Speaker On/Off">
+            <i class="fas fa-volume-up"></i>
+          </button>
+          <button class="call-btn end" id="videoEndBtn" title="End Call">
+            <i class="fas fa-phone-slash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <!-- Messages will be dynamically added here -->
+    </div>
+
+    <div class="chat-input-container">
+      <div class="chat-input-wrapper">
+        <div class="input-group">
+          <textarea 
+            id="messageInput" 
+            placeholder="Share what's on your mind..."
+            rows="1"
+          ></textarea>
+        </div>
+        <div class="input-controls">
+          <button class="btn btn-primary" id="sendBtn">
+            <i class="fas fa-paper-plane"></i>
+            Send
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3><i class="fas fa-cog"></i> Chat Settings</h3>
+        <button class="close-btn" id="closeSettings">&times;</button>
+      </div>
+      
+      <div class="setting-group">
+        <label for="voiceMode">Voice Mode</label>
+        <select id="voiceMode">
+          <option value="off">Off</option>
+          <option value="input">Voice Input Only</option>
+          <option value="output">Voice Output Only</option>
+          <option value="both">Both Input & Output</option>
+        </select>
+      </div>
+      
+      <div class="setting-group">
+        <label for="speechSpeed">Speech Speed</label>
+        <input type="range" id="speechSpeed" min="0.5" max="2" step="0.1" value="1">
+        <span id="speedValue">1.0x</span>
+      </div>
+      
+      <div class="setting-group">
+        <label for="voiceSelect">Voice</label>
+        <select id="voiceSelect">
+          <option value="default">Default</option>
+        </select>
+      </div>
+      
+      <div class="setting-group">
+        <button class="btn btn-secondary" id="exportSession">
+          <i class="fas fa-download"></i>
+          Export Session
+        </button>
+        <button class="btn btn-secondary" id="clearSession" style="margin-left: 1rem;">
+          <i class="fas fa-trash"></i>
+          Clear Session
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js?v=16"></script>
+    <script src="js/memory-layers.js?v=16"></script>
+    <script src="js/memory-manager.js?v=16"></script>
+    <script src="js/memory-ui.js?v=16"></script>
+    <script src="js/conversation-history.js?v=16"></script>
+    <script src="js/chat-reference.js?v=16"></script>
+    <script src="js/azure-ai.js?v=16"></script>
+  <script src="js/azure-translation.js?v=16"></script>
+  
+  <script src="js/auth.js?v=16"></script>
+  <script src="js/voice-call.js?v=16"></script>
+  <script src="js/chat.js?v=16"></script>
+  
+  <script>
+    // Initialize chat when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Update user greeting
+      const currentUser = AuthManager.getCurrentUser();
+      if (currentUser) {
+        const userGreeting = document.getElementById('userGreeting');
+        const preferredName = currentUser.nickname || currentUser.fullName.split(' ')[0];
+        userGreeting.textContent = `Hello, ${preferredName}!`;
+      }
+      
+      // Handle logout
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          if (confirm('Are you sure you want to logout?')) {
+            AuthManager.logout();
+            window.location.href = 'auth.html';
+          }
+        });
+      }
+      
+      // Auto-focus on message input
+      const messageInput = document.getElementById('messageInput');
+      if (messageInput) {
+        messageInput.focus();
+      }
+    });
+  </script>
+</body>
+</html>

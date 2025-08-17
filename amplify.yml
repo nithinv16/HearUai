@@ -1,0 +1,46 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Installing dependencies..."
+        - npm install
+    build:
+      commands:
+        - echo "Building the application..."
+        - echo "Copying production config..."
+        - cp js/config.production.js js/config.js
+        - echo "Build completed successfully"
+    postBuild:
+      commands:
+        - echo "Post-build phase completed"
+  artifacts:
+    baseDirectory: .
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+  customHeaders:
+    - pattern: '**/*'
+      headers:
+        - key: 'X-Frame-Options'
+          value: 'DENY'
+        - key: 'X-Content-Type-Options'
+          value: 'nosniff'
+        - key: 'Referrer-Policy'
+          value: 'strict-origin-when-cross-origin'
+        - key: 'Permissions-Policy'
+          value: 'camera=(), microphone=(), geolocation=()'
+  environmentVariables:
+    - AZURE_OPENAI_ENDPOINT
+    - AZURE_OPENAI_API_KEY
+    - AZURE_OPENAI_DEPLOYMENT
+    - AZURE_AI_SERVICES_ENDPOINT
+    - AZURE_AI_SERVICES_API_KEY
+    - AZURE_SPEECH_API_KEY
+    - AZURE_TEXT_ANALYTICS_ENDPOINT
+    - AZURE_TEXT_ANALYTICS_API_KEY
+    - AZURE_TRANSLATION_API_KEY
+    - AZURE_AVATAR_API_KEY
+    - AZURE_REGION
