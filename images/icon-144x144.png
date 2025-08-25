@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" width="144" height="144">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a90e2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#357abd;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ee5a52;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="brainGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8e6cf;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7fcdcd;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background Circle -->
+  <circle cx="72" cy="72" r="68" fill="url(#bgGradient)" stroke="#ffffff" stroke-width="2"/>
+  
+  <!-- Brain/AI Symbol -->
+  <g transform="translate(72,50)">
+    <!-- Brain outline -->
+    <path d="M-17,-11 C-23,-17 -23,-23 -17,-25 C-11,-28 -6,-28 0,-25 C6,-28 11,-28 17,-25 C23,-23 23,-17 17,-11 C17,-6 17,0 14,6 C11,11 6,14 0,14 C-6,14 -11,11 -14,6 C-17,0 -17,-6 -17,-11 Z" 
+          fill="url(#brainGradient)" stroke="#ffffff" stroke-width="1"/>
+    
+    <!-- Brain details -->
+    <path d="M-11,-6 C-8,-8 -3,-8 0,-6 C3,-8 8,-8 11,-6" 
+          fill="none" stroke="#ffffff" stroke-width="1" opacity="0.8"/>
+    <path d="M-8,0 C-6,-3 0,-3 3,0 C6,-3 11,-3 8,3" 
+          fill="none" stroke="#ffffff" stroke-width="1" opacity="0.8"/>
+    
+    <!-- AI Circuit patterns -->
+    <circle cx="-7" cy="-4" r="1" fill="#ffffff" opacity="0.9"/>
+    <circle cx="7" cy="-4" r="1" fill="#ffffff" opacity="0.9"/>
+    <circle cx="0" cy="1" r="1" fill="#ffffff" opacity="0.9"/>
+    
+    <!-- Connecting lines -->
+    <line x1="-7" y1="-4" x2="0" y2="1" stroke="#ffffff" stroke-width="0.5" opacity="0.7"/>
+    <line x1="7" y1="-4" x2="0" y2="1" stroke="#ffffff" stroke-width="0.5" opacity="0.7"/>
+  </g>
+  
+  <!-- Heart Symbol -->
+  <g transform="translate(56,90)">
+    <path d="M0,4 C-4,0 -8,-4 -4,-8 C0,-12 4,-8 8,-4 C12,0 8,4 4,8 C2,10 0,12 0,4 Z" 
+          fill="url(#heartGradient)" stroke="#ffffff" stroke-width="1"/>
+    <!-- Heart highlight -->
+    <ellipse cx="-2" cy="-2" rx="2" ry="1" fill="#ffffff" opacity="0.4"/>
+  </g>
+  
+  <!-- Sound waves (representing hearing/listening) -->
+  <g transform="translate(100,72)">
+    <path d="M0,-8 C4,-4 4,4 0,8" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+    <path d="M4,-12 C10,-6 10,6 4,12" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
+    <path d="M8,-16 C16,-8 16,8 8,16" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+  </g>
+</svg>

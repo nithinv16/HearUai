@@ -14,9 +14,33 @@ class AzureTranslationService {
         this.currentLanguage = config.translation.defaultLanguage;
         this.autoDetect = config.translation.autoDetect;
         
+
+        
+        // Validate configuration
+        this.isConfigured = this.validateConfiguration();
+        if (!this.isConfigured) {
+            console.warn('Azure Translation service is not properly configured. Translation features will be limited.');
+        }
+        
         // Cache for detected languages to improve performance
         this.languageCache = new Map();
         this.translationCache = new Map();
+    }
+    
+    validateConfiguration() {
+
+        
+        if (!this.subscriptionKey || this.subscriptionKey.trim() === '') {
+            console.warn('Azure Translation subscription key is missing or empty');
+            return false;
+        }
+        
+        if (!this.endpoint || this.endpoint.trim() === '') {
+            console.warn('Azure Translation endpoint is missing or empty');
+            return false;
+        }
+        
+        return true;
     }
 
     /**
@@ -41,6 +65,20 @@ class AzureTranslationService {
             if (mixedLanguageResult.isMixed) {
                 this.languageCache.set(cacheKey, mixedLanguageResult);
                 return mixedLanguageResult;
+            }
+
+
+            
+            // Robust validation check - multiple conditions to ensure no API calls with empty keys
+            const hasValidKey = this.subscriptionKey && 
+                               typeof this.subscriptionKey === 'string' && 
+                               this.subscriptionKey.trim().length > 0;
+            
+            if (!this.isConfigured || !hasValidKey) {
+                console.warn('Azure Translation not configured, using default language detection');
+                const fallbackResult = { language: this.currentLanguage, confidence: 0.5, isMixed: false };
+                this.languageCache.set(cacheKey, fallbackResult);
+                return fallbackResult;
             }
 
             // Use Azure Translator for language detection
@@ -134,6 +172,19 @@ class AzureTranslationService {
         const cacheKey = `${text}_${sourceLang || 'auto'}_${targetLang}`;
         if (this.translationCache.has(cacheKey)) {
             return this.translationCache.get(cacheKey);
+        }
+
+        // Check configuration before making API call
+        // Robust validation check - multiple conditions to ensure no API calls with empty keys
+        const hasValidKey = this.subscriptionKey && 
+                           typeof this.subscriptionKey === 'string' && 
+                           this.subscriptionKey.trim().length > 0;
+        
+        if (!this.isConfigured || !hasValidKey) {
+            console.warn('Azure Translation not configured, returning original text');
+            const fallbackResult = { translatedText: text, sourceLanguage: sourceLang || 'en' };
+            this.translationCache.set(cacheKey, fallbackResult);
+            return fallbackResult;
         }
 
         try {

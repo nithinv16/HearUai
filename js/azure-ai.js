@@ -3,23 +3,75 @@
 // Note: This implementation uses browser-compatible fetch API instead of the Node.js client library
 
 class AzureAIClient {
-  constructor(config) {
+  constructor(config, fullConfig = null) {
     // Remove trailing slash from endpoint if present
     this.endpoint = config.endpoint.replace(/\/$/, '');
     this.apiKey = config.apiKey;
     this.deploymentName = config.deploymentName;
     this.apiVersion = '2024-02-15-preview';
+    
+    // Store full config for accessing other services
+    this.fullConfig = fullConfig || window.AZURE_CONFIG;
+    
+    // Set up Text Analytics endpoint and key
+    if (this.fullConfig && this.fullConfig.textAnalytics) {
+      this.textAnalyticsEndpoint = this.fullConfig.textAnalytics.endpoint.replace(/\/$/, '');
+      this.textAnalyticsKey = this.fullConfig.textAnalytics.subscriptionKey;
+    }
+    
+
+    
+    // Validate configuration
+        this.isConfigured = this.validateConfiguration();
+    if (!this.isConfigured) {
+      console.warn('Azure AI client is not properly configured. API calls will use fallback responses.');
+    }
+  }
+  
+  validateConfiguration() {
+
+    
+    if (!this.apiKey || this.apiKey.trim() === '') {
+      console.warn('Azure AI API key is missing or empty');
+      return false;
+    }
+    
+    if (!this.endpoint || this.endpoint.trim() === '') {
+      console.warn('Azure AI endpoint is missing or empty');
+      return false;
+    }
+    
+    if (!this.deploymentName || this.deploymentName.trim() === '') {
+      console.warn('Azure AI deployment name is missing or empty');
+      return false;
+    }
+    
+    return true;
   }
 
   async sendMessage(message, conversationHistory = [], memoryContext = null) {
     try {
+      // Check configuration first
+
+      
+      // Robust validation check - multiple conditions to ensure no API calls with empty keys
+      const hasValidKey = this.apiKey && 
+                         typeof this.apiKey === 'string' && 
+                         this.apiKey.trim().length > 0;
+      
+      if (!this.isConfigured || !hasValidKey) {
+        console.warn('Azure AI client not configured, using fallback response');
+        return this.getFallbackResponse(message);
+      }
+      
       // Check if we're in development mode and use proxy server
       const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
       
       console.log('Azure AI Request:', {
         message: message.substring(0, 100) + '...',
         historyLength: conversationHistory.length,
-        isDevelopment: isDevelopment
+        isDevelopment: isDevelopment,
+        isConfigured: this.isConfigured
       });
       
       // Build memory-aware system message
@@ -163,12 +215,9 @@ Further more, you can quote dialogues, quotes from movies as per the user's like
       let headers;
       
       if (isDevelopment) {
-        // Use proxy server in development
+        // Use proxy server in development (proxy uses environment variables)
         url = 'http://localhost:3001/api/azure-openai';
         requestBody = {
-          endpoint: this.endpoint,
-          apiKey: this.apiKey,
-          deploymentName: this.deploymentName,
           messages: messages,
           max_tokens: 500,
           temperature: 0.7,
@@ -180,8 +229,9 @@ Further more, you can quote dialogues, quotes from movies as per the user's like
           'Content-Type': 'application/json'
         };
       } else {
-        // Direct API call for production
-        url = `${this.endpoint}/openai/deployments/${this.deploymentName}/chat/completions?api-version=${this.apiVersion}`;
+        // Direct API call for production - properly encode deployment name
+        const encodedDeploymentName = encodeURIComponent(this.deploymentName);
+        url = `${this.endpoint}/openai/deployments/${encodedDeploymentName}/chat/completions?api-version=${this.apiVersion}`;
         requestBody = {
           messages: messages,
           max_tokens: 500,
@@ -249,20 +299,43 @@ Further more, you can quote dialogues, quotes from movies as per the user's like
     }
   }
 
-  getFallbackResponse() {
-    return "I'm sorry, I'm having trouble connecting to my AI services right now. Could you please try again in a moment? I'm here to help you whenever you're ready.";
+  getFallbackResponse(message = '') {
+    const fallbackResponses = [
+      "I'm currently unable to connect to my AI services. However, I'm still here to help! Could you try rephrasing your question?",
+      "I'm experiencing some technical difficulties with my AI backend. Please try again in a moment, and I'll do my best to assist you.",
+      "My AI services are temporarily unavailable, but I haven't forgotten about you! Please try your request again shortly.",
+      "I'm having trouble accessing my full capabilities right now. Could you please try again? I'm eager to help once my services are restored."
+    ];
+    
+    // Return a random fallback response in the expected format
+    const randomIndex = Math.floor(Math.random() * fallbackResponses.length);
+    return {
+      content: fallbackResponses[randomIndex],
+      role: 'assistant',
+      timestamp: new Date().toISOString()
+    };
   }
 
   async analyzeSentiment(text) {
     try {
-      // This would integrate with Azure Text Analytics for sentiment analysis
-      const url = `${this.endpoint}/text/analytics/v3.1/sentiment`;
+      // Check configuration first
+      if (!this.textAnalyticsEndpoint || !this.textAnalyticsKey || this.textAnalyticsKey.trim() === '') {
+        console.warn('Azure Text Analytics not configured, returning neutral sentiment');
+        return {
+          sentiment: 'neutral',
+          confidence: 0.5,
+          scores: { positive: 0.33, neutral: 0.34, negative: 0.33 }
+        };
+      }
+      
+      // Use the correct Text Analytics endpoint
+      const url = `${this.textAnalyticsEndpoint}/text/analytics/v3.1/sentiment`;
       
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Ocp-Apim-Subscription-Key': this.apiKey
+          'Ocp-Apim-Subscription-Key': this.textAnalyticsKey
         },
         body: JSON.stringify({
           documents: [{

@@ -184,7 +184,7 @@ class ConversationHistoryManager {
       // Search messages in session
       session.messages.forEach(message => {
         let relevanceScore = 0;
-        const messageText = message.content.toLowerCase();
+        const messageText = message.content && typeof message.content === 'string' ? message.content.toLowerCase() : '';
         
         // Calculate relevance score
         queryWords.forEach(word => {
@@ -414,6 +414,7 @@ class ConversationHistoryManager {
   }
 
   addToSearchIndex(message, sessionId) {
+    if (!message.content || typeof message.content !== 'string') return;
     const words = message.content.toLowerCase().split(/\W+/);
     words.forEach(word => {
       if (word.length > 2) {

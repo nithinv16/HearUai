@@ -49,6 +49,14 @@ pids/
 *.seed
 *.pid.lock
 
+# Development files (should not be deployed)
+setup-dev-auth.html
+proxy-server.js
+test-*.js
+
+# Generated config file (will be created during build)
+js/config.js
+
 # Coverage directory used by tools like istanbul
 coverage/
 

@@ -75,7 +75,7 @@ class HearUAIChat {
     try {
       // Load configuration from config.js
       if (typeof AZURE_CONFIG !== 'undefined' && AZURE_CONFIG.openai) {
-        this.azureClient = new AzureAIClient(AZURE_CONFIG.openai);
+      this.azureClient = new AzureAIClient(AZURE_CONFIG.openai, AZURE_CONFIG);
         console.log('Azure AI client initialized successfully');
         
         // Initialize VoiceCallManager now that Azure client is ready
@@ -166,7 +166,8 @@ class HearUAIChat {
           this.aiResponseLanguage = detectedLanguage;
         }
       } catch (error) {
-        console.warn('Language detection failed:', error);
+        console.warn('Language detection failed, using default language:', error);
+        // Continue with default language settings
       }
     }
 
@@ -202,14 +203,20 @@ class HearUAIChat {
         };
         
         // Send message to Azure AI with enhanced context and memory
+      try {
         response = await this.azureClient.sendMessage(message, enhancedHistory, enhancedMemoryContext);
-      } else {
-        // Use fallback responses
+      } catch (error) {
+        console.error('Azure AI service error:', error);
+        this.showErrorNotification('AI service temporarily unavailable. Using fallback response.');
         response = this.getFallbackResponse(message);
       }
+    } else {
+      // Use fallback responses
+      response = this.getFallbackResponse(message);
+    }
 
-      // Remove typing indicator
-      this.removeTypingIndicator();
+    // Remove typing indicator
+    this.removeTypingIndicator();
 
       // Handle translation if needed
       let finalResponse = response;
@@ -439,11 +446,53 @@ class HearUAIChat {
         this.storeSentiment(sentiment);
         return sentiment;
       }
-      return null;
+      // Provide basic sentiment analysis fallback
+      const fallbackSentiment = this.getBasicSentiment(message);
+      this.storeSentiment(fallbackSentiment);
+      return fallbackSentiment;
     } catch (error) {
-      console.error('Error analyzing sentiment:', error);
-      return null;
+      console.warn('Sentiment analysis failed, using basic fallback:', error);
+      // Provide basic sentiment analysis fallback
+      const fallbackSentiment = this.getBasicSentiment(message);
+      this.storeSentiment(fallbackSentiment);
+      return fallbackSentiment;
     }
+  }
+  
+  getBasicSentiment(message) {
+    // Simple keyword-based sentiment analysis as fallback
+    const positiveWords = ['happy', 'good', 'great', 'excellent', 'wonderful', 'amazing', 'love', 'like', 'enjoy', 'excited', 'grateful', 'thankful'];
+    const negativeWords = ['sad', 'bad', 'terrible', 'awful', 'hate', 'angry', 'frustrated', 'depressed', 'worried', 'anxious', 'stressed', 'upset'];
+    
+    const words = message.toLowerCase().split(/\s+/);
+    let positiveCount = 0;
+    let negativeCount = 0;
+    
+    words.forEach(word => {
+      if (positiveWords.includes(word)) positiveCount++;
+      if (negativeWords.includes(word)) negativeCount++;
+    });
+    
+    let sentiment = 'neutral';
+    let confidence = 0.5;
+    
+    if (positiveCount > negativeCount) {
+      sentiment = 'positive';
+      confidence = Math.min(0.8, 0.5 + (positiveCount - negativeCount) * 0.1);
+    } else if (negativeCount > positiveCount) {
+      sentiment = 'negative';
+      confidence = Math.min(0.8, 0.5 + (negativeCount - positiveCount) * 0.1);
+    }
+    
+    return {
+      sentiment,
+      confidence,
+      scores: {
+        positive: sentiment === 'positive' ? confidence : (1 - confidence) / 2,
+        neutral: sentiment === 'neutral' ? confidence : (1 - confidence) / 2,
+        negative: sentiment === 'negative' ? confidence : (1 - confidence) / 2
+      }
+    };
   }
 
   storeSentiment(sentiment) {

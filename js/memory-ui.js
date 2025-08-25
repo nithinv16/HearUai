@@ -1,12 +1,18 @@
 class MemoryUI {
   constructor() {
     // Check authentication first
-    if (!AuthManager.isUserAuthenticated()) {
+    if (typeof AuthManager !== 'undefined' && !AuthManager.isUserAuthenticated()) {
       window.location.href = 'auth.html';
       return;
     }
     
-    this.currentUser = AuthManager.getCurrentUser();
+    // If AuthManager is not available, continue without authentication check
+    if (typeof AuthManager === 'undefined') {
+      console.warn('AuthManager not available, continuing without authentication');
+      this.currentUser = { id: 'guest', name: 'Guest User' }; // Default user
+    } else {
+      this.currentUser = AuthManager.getCurrentUser();
+    }
     this.memoryManager = null;
     this.conversationHistoryManager = null;
     this.chatReferenceManager = null;
