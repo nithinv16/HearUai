@@ -448,6 +448,361 @@
       box-shadow: var(--shadow-2xl);
     }
 
+    .btn-companion {
+      background: linear-gradient(135deg, #ff6b9d 0%, #c44569 50%, #f8b500 100%);
+      color: var(--white);
+      border: 1px solid rgba(255, 107, 157, 0.3);
+      box-shadow: 0 10px 30px rgba(255, 107, 157, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-companion::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: var(--transition-base);
+    }
+
+    .btn-companion:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(255, 107, 157, 0.4);
+      background: linear-gradient(135deg, #ff7ba7 0%, #d55579 50%, #f9c520 100%);
+    }
+
+    .btn-companion:hover::before {
+      left: 100%;
+    }
+
+    .btn-companion:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-memory {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      color: var(--white);
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-memory::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: var(--transition-base);
+    }
+
+    .btn-memory:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(135deg, #7c8ef0 0%, #8a5fb2 50%, #f2a3fc 100%);
+    }
+
+    .btn-memory:hover::before {
+      left: 100%;
+    }
+
+    .btn-memory:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    /* Journal Button Styles */
+    .btn-journal {
+      background: linear-gradient(135deg, #ff9a56 0%, #ff6b9d 50%, #c44569 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(255, 154, 86, 0.3);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .btn-journal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: var(--transition-base);
+    }
+
+    .btn-journal:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(255, 154, 86, 0.4);
+      background: linear-gradient(135deg, #ffab70 0%, #ff7bb0 50%, #d55a7a 100%);
+    }
+
+    .btn-journal:hover::before {
+      left: 100%;
+    }
+
+    .btn-journal:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    /* Radar Button Styles */
+    .btn-radar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .btn-radar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: var(--transition-base);
+    }
+
+    .btn-radar:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(135deg, #7b8ff0 0%, #8a5fb8 50%, #f5a9ff 100%);
+    }
+
+    .btn-radar:hover::before {
+      left: 100%;
+    }
+
+    .btn-radar:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-growth {
+      background: linear-gradient(135deg, #54a0ff 0%, #2e86de 50%, #0abde3 100%);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(84, 160, 255, 0.3);
+      border: 2px solid transparent;
+      background-clip: padding-box;
+    }
+
+    .btn-growth::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: var(--transition-base);
+    }
+
+    .btn-growth:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(84, 160, 255, 0.4);
+      background: linear-gradient(135deg, #5f6aff 0%, #3742fa 50%, #2f3542 100%);
+    }
+
+    .btn-growth:hover::before {
+      left: 100%;
+    }
+
+    .btn-growth:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-integration {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      border: none;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition-base);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-integration::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: var(--transition-base);
+    }
+
+    .btn-integration:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+      background: linear-gradient(135deg, #5f6aff 0%, #667eea 50%, #764ba2 100%);
+    }
+
+    .btn-integration:hover::before {
+      left: 100%;
+    }
+
+    .btn-integration:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-therapy {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition-base);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(240, 147, 251, 0.3);
+    }
+
+    .btn-therapy::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: var(--transition-base);
+    }
+
+    .btn-therapy:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(240, 147, 251, 0.4);
+      background: linear-gradient(135deg, #ff6b9d 0%, #f093fb 50%, #f5576c 100%);
+    }
+
+    .btn-therapy:hover::before {
+      left: 100%;
+    }
+
+    .btn-therapy:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-hrv {
+      background: linear-gradient(135deg, #e74c3c, #c0392b);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-hrv::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-hrv:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(231, 76, 60, 0.4);
+    }
+
+    .btn-hrv:hover::before {
+      left: 100%;
+    }
+
+    .btn-hrv:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-mrt {
+      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(155, 89, 182, 0.3);
+    }
+
+    .btn-mrt::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-mrt:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(155, 89, 182, 0.4);
+    }
+
+    .btn-mrt:hover::before {
+      left: 100%;
+    }
+
+    .btn-mrt:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
+    .btn-measurement {
+      background: linear-gradient(135deg, #16a085, #1abc9c);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(22, 160, 133, 0.3);
+    }
+
+    .btn-measurement::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-measurement:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 40px rgba(22, 160, 133, 0.4);
+    }
+
+    .btn-measurement:hover::before {
+      left: 100%;
+    }
+
+    .btn-measurement:active {
+      transform: translateY(-1px) scale(1.01);
+    }
+
     /* Navigation */
     nav {
       background: var(--gradient-glass);
@@ -1503,6 +1858,46 @@
         <a href="chat.html" class="btn btn-outline">
           <i class="fas fa-heart"></i>
           Friendly Chat Mode
+        </a>
+        <a href="companion-chat.html" class="btn btn-companion">
+          <i class="fas fa-heart-circle"></i>
+          Companion Mode
+        </a>
+        <a href="emotional-memory.html" class="btn btn-memory">
+          <i class="fas fa-brain"></i>
+          Emotional Memory
+        </a>
+        <a href="smart-journal.html" class="btn btn-journal">
+          <i class="fas fa-pen-fancy"></i>
+          Smart Journal
+        </a>
+        <a href="mood-radar.html" class="btn btn-radar">
+          <i class="fas fa-radar"></i>
+          Mood Radar
+        </a>
+        <a href="growth-path.html" class="btn btn-growth">
+          <i class="fas fa-seedling"></i>
+          Growth Path
+        </a>
+        <a href="life-integration.html" class="btn btn-integration">
+          <i class="fas fa-link"></i>
+          Life Integration
+        </a>
+        <a href="group-therapy.html" class="btn btn-therapy">
+          <i class="fas fa-users"></i>
+          Group Therapy
+        </a>
+        <a href="hrv-breath-coach.html" class="btn btn-hrv">
+          <i class="fas fa-heartbeat"></i>
+          HRV Breath Coach
+        </a>
+        <a href="mrt-engine.html" class="btn btn-mrt">
+          <i class="fas fa-flask"></i>
+          MRT Engine
+        </a>
+        <a href="measurement-care.html" class="btn btn-measurement">
+          <i class="fas fa-chart-line"></i>
+          Measurement-Based Care
         </a>
       </div>
     </div>

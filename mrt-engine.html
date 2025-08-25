@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRT Engagement Engine - HearuAI</title>
+    <link rel="stylesheet" href="css/mrt-engine.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <button class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>MRT Engagement Engine</h1>
+            <button class="settings-btn" id="settingsBtn">
+                <i class="fas fa-cog"></i>
+            </button>
+        </header>
+
+        <main class="main-content">
+            <!-- Trial Status Section -->
+            <section class="trial-status">
+                <div class="status-card">
+                    <div class="status-header">
+                        <h2>Current Trial Status</h2>
+                        <div class="trial-indicator" id="trialIndicator">
+                            <i class="fas fa-circle"></i>
+                            <span>Active</span>
+                        </div>
+                    </div>
+                    <div class="trial-metrics">
+                        <div class="metric">
+                            <div class="metric-value" id="trialDay">14</div>
+                            <div class="metric-label">Trial Day</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" id="interventionsDelivered">127</div>
+                            <div class="metric-label">Interventions</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" id="engagementRate">73%</div>
+                            <div class="metric-label">Engagement</div>
+                        </div>
+                        <div class="metric">
+                            <div class="metric-value" id="responseRate">68%</div>
+                            <div class="metric-label">Response Rate</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Randomization Engine Section -->
+            <section class="randomization-engine">
+                <div class="engine-card">
+                    <h3>Randomization Engine</h3>
+                    <div class="randomization-grid">
+                        <div class="randomization-item">
+                            <div class="item-header">
+                                <h4>Timing Optimization</h4>
+                                <div class="optimization-status active">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Learning</span>
+                                </div>
+                            </div>
+                            <div class="optimization-details">
+                                <div class="detail-row">
+                                    <span>Optimal Window:</span>
+                                    <span class="value">2:30 PM - 4:00 PM</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Success Rate:</span>
+                                    <span class="value">84%</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Next Test:</span>
+                                    <span class="value">Evening slot</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="randomization-item">
+                            <div class="item-header">
+                                <h4>Content Personalization</h4>
+                                <div class="optimization-status active">
+                                    <i class="fas fa-message"></i>
+                                    <span>Optimizing</span>
+                                </div>
+                            </div>
+                            <div class="optimization-details">
+                                <div class="detail-row">
+                                    <span>Best Tone:</span>
+                                    <span class="value">Encouraging</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Preferred Length:</span>
+                                    <span class="value">Short (< 50 chars)</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Emoji Usage:</span>
+                                    <span class="value">Moderate</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="randomization-item">
+                            <div class="item-header">
+                                <h4>Delivery Method</h4>
+                                <div class="optimization-status learning">
+                                    <i class="fas fa-mobile"></i>
+                                    <span>Testing</span>
+                                </div>
+                            </div>
+                            <div class="optimization-details">
+                                <div class="detail-row">
+                                    <span>Push Notifications:</span>
+                                    <span class="value">72% response</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>In-App Messages:</span>
+                                    <span class="value">89% response</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span>Email Reminders:</span>
+                                    <span class="value">45% response</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Intervention Queue Section -->
+            <section class="intervention-queue">
+                <div class="queue-card">
+                    <h3>Upcoming Interventions</h3>
+                    <div class="queue-list" id="queueList">
+                        <div class="queue-item">
+                            <div class="intervention-time">
+                                <i class="fas fa-clock"></i>
+                                <span>Today, 3:15 PM</span>
+                            </div>
+                            <div class="intervention-content">
+                                <h4>Mood Check-in</h4>
+                                <p>"How are you feeling right now? 🌟"</p>
+                                <div class="intervention-meta">
+                                    <span class="tone-tag encouraging">Encouraging</span>
+                                    <span class="method-tag push">Push</span>
+                                    <span class="probability">85% delivery</span>
+                                </div>
+                            </div>
+                            <div class="intervention-actions">
+                                <button class="btn-edit" onclick="editIntervention(1)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-cancel" onclick="cancelIntervention(1)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="queue-item">
+                            <div class="intervention-time">
+                                <i class="fas fa-clock"></i>
+                                <span>Today, 6:30 PM</span>
+                            </div>
+                            <div class="intervention-content">
+                                <h4>Breathing Reminder</h4>
+                                <p>"Time for a quick breathing exercise? 🧘‍♀️"</p>
+                                <div class="intervention-meta">
+                                    <span class="tone-tag gentle">Gentle</span>
+                                    <span class="method-tag in-app">In-App</span>
+                                    <span class="probability">92% delivery</span>
+                                </div>
+                            </div>
+                            <div class="intervention-actions">
+                                <button class="btn-edit" onclick="editIntervention(2)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-cancel" onclick="cancelIntervention(2)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="queue-item">
+                            <div class="intervention-time">
+                                <i class="fas fa-clock"></i>
+                                <span>Tomorrow, 9:00 AM</span>
+                            </div>
+                            <div class="intervention-content">
+                                <h4>Daily Affirmation</h4>
+                                <p>"You've got this! Start your day with intention ✨"</p>
+                                <div class="intervention-meta">
+                                    <span class="tone-tag motivational">Motivational</span>
+                                    <span class="method-tag push">Push</span>
+                                    <span class="probability">78% delivery</span>
+                                </div>
+                            </div>
+                            <div class="intervention-actions">
+                                <button class="btn-edit" onclick="editIntervention(3)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn-cancel" onclick="cancelIntervention(3)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="addInterventionBtn">
+                        <i class="fas fa-plus"></i>
+                        Add Intervention
+                    </button>
+                </div>
+            </section>
+
+            <!-- Analytics Dashboard Section -->
+            <section class="analytics-dashboard">
+                <div class="analytics-card">
+                    <h3>Engagement Analytics</h3>
+                    <div class="analytics-grid">
+                        <div class="chart-container">
+                            <h4>Response Rates by Time</h4>
+                            <canvas id="timeChart" width="300" height="200"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h4>Content Performance</h4>
+                            <canvas id="contentChart" width="300" height="200"></canvas>
+                        </div>
+                    </div>
+                    <div class="insights-summary">
+                        <div class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h4>Best Performing</h4>
+                                <p>Gentle reminders at 3 PM show 89% engagement</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h4>Optimization Opportunity</h4>
+                                <p>Morning interventions could benefit from shorter messages</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="insight-content">
+                                <h4>Trend Analysis</h4>
+                                <p>Engagement increasing 12% week-over-week</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- A/B Testing Section -->
+            <section class="ab-testing">
+                <div class="testing-card">
+                    <h3>Active A/B Tests</h3>
+                    <div class="test-list">
+                        <div class="test-item">
+                            <div class="test-header">
+                                <h4>Notification Timing</h4>
+                                <div class="test-status running">
+                                    <i class="fas fa-play"></i>
+                                    <span>Running</span>
+                                </div>
+                            </div>
+                            <div class="test-details">
+                                <div class="test-variants">
+                                    <div class="variant">
+                                        <span class="variant-label">A: Fixed Schedule</span>
+                                        <div class="variant-metrics">
+                                            <span>45% engagement</span>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 45%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="variant">
+                                        <span class="variant-label">B: Adaptive Timing</span>
+                                        <div class="variant-metrics">
+                                            <span>73% engagement</span>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 73%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="test-meta">
+                                    <span>Sample Size: 156 users</span>
+                                    <span>Confidence: 95%</span>
+                                    <span>Days Remaining: 12</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="test-item">
+                            <div class="test-header">
+                                <h4>Message Tone</h4>
+                                <div class="test-status completed">
+                                    <i class="fas fa-check"></i>
+                                    <span>Completed</span>
+                                </div>
+                            </div>
+                            <div class="test-details">
+                                <div class="test-variants">
+                                    <div class="variant">
+                                        <span class="variant-label">A: Formal Tone</span>
+                                        <div class="variant-metrics">
+                                            <span>62% engagement</span>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 62%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="variant winner">
+                                        <span class="variant-label">B: Friendly Tone</span>
+                                        <div class="variant-metrics">
+                                            <span>81% engagement</span>
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 81%"></div>
+                                            </div>
+                                        </div>
+                                        <i class="fas fa-crown winner-icon"></i>
+                                    </div>
+                                </div>
+                                <div class="test-meta">
+                                    <span>Sample Size: 203 users</span>
+                                    <span>Significance: p < 0.01</span>
+                                    <span>Winner: Friendly Tone</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="createTestBtn">
+                        <i class="fas fa-flask"></i>
+                        Create New Test
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>MRT Engine Settings</h3>
+                    <button class="close-btn" onclick="closeModal('settingsModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="setting-group">
+                        <label for="randomizationRate">Randomization Rate:</label>
+                        <input type="range" id="randomizationRate" min="0.1" max="1.0" step="0.1" value="0.5">
+                        <span id="randomizationValue">50%</span>
+                    </div>
+                    <div class="setting-group">
+                        <label for="minInterventionGap">Minimum Intervention Gap (hours):</label>
+                        <input type="number" id="minInterventionGap" min="1" max="24" value="4">
+                    </div>
+                    <div class="setting-group">
+                        <label for="maxDailyInterventions">Max Daily Interventions:</label>
+                        <input type="number" id="maxDailyInterventions" min="1" max="10" value="5">
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enableAdaptiveTiming" checked>
+                            Enable Adaptive Timing
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label>
+                            <input type="checkbox" id="enableContentPersonalization" checked>
+                            Enable Content Personalization
+                        </label>
+                    </div>
+                    <div class="setting-group">
+                        <label for="learningRate">Learning Rate:</label>
+                        <select id="learningRate">
+                            <option value="conservative">Conservative</option>
+                            <option value="moderate" selected>Moderate</option>
+                            <option value="aggressive">Aggressive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal('settingsModal')">Cancel</button>
+                    <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Intervention Modal -->
+        <div class="modal" id="addInterventionModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add New Intervention</h3>
+                    <button class="close-btn" onclick="closeModal('addInterventionModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="interventionType">Intervention Type:</label>
+                        <select id="interventionType">
+                            <option value="mood-checkin">Mood Check-in</option>
+                            <option value="breathing-reminder">Breathing Reminder</option>
+                            <option value="affirmation">Daily Affirmation</option>
+                            <option value="journal-prompt">Journal Prompt</option>
+                            <option value="activity-suggestion">Activity Suggestion</option>
+                            <option value="custom">Custom Message</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="interventionMessage">Message:</label>
+                        <textarea id="interventionMessage" rows="3" placeholder="Enter your intervention message..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="interventionTone">Tone:</label>
+                        <select id="interventionTone">
+                            <option value="encouraging">Encouraging</option>
+                            <option value="gentle">Gentle</option>
+                            <option value="motivational">Motivational</option>
+                            <option value="supportive">Supportive</option>
+                            <option value="playful">Playful</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="deliveryMethod">Delivery Method:</label>
+                        <select id="deliveryMethod">
+                            <option value="push">Push Notification</option>
+                            <option value="in-app">In-App Message</option>
+                            <option value="email">Email</option>
+                            <option value="adaptive">Adaptive (Let MRT decide)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="schedulingMode">Scheduling:</label>
+                        <select id="schedulingMode">
+                            <option value="optimal">Optimal Time (MRT decides)</option>
+                            <option value="specific">Specific Time</option>
+                            <option value="random">Random within window</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="specificTimeGroup" style="display: none;">
+                        <label for="specificTime">Specific Time:</label>
+                        <input type="datetime-local" id="specificTime">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal('addInterventionModal')">Cancel</button>
+                    <button class="btn-primary" onclick="addIntervention()">Add Intervention</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create A/B Test Modal -->
+        <div class="modal" id="createTestModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Create A/B Test</h3>
+                    <button class="close-btn" onclick="closeModal('createTestModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="testName">Test Name:</label>
+                        <input type="text" id="testName" placeholder="e.g., Evening vs Morning Notifications">
+                    </div>
+                    <div class="form-group">
+                        <label for="testVariable">Variable to Test:</label>
+                        <select id="testVariable">
+                            <option value="timing">Notification Timing</option>
+                            <option value="content">Message Content</option>
+                            <option value="tone">Message Tone</option>
+                            <option value="frequency">Intervention Frequency</option>
+                            <option value="delivery">Delivery Method</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="variantA">Variant A:</label>
+                        <input type="text" id="variantA" placeholder="Describe variant A">
+                    </div>
+                    <div class="form-group">
+                        <label for="variantB">Variant B:</label>
+                        <input type="text" id="variantB" placeholder="Describe variant B">
+                    </div>
+                    <div class="form-group">
+                        <label for="testDuration">Test Duration (days):</label>
+                        <input type="number" id="testDuration" min="7" max="30" value="14">
+                    </div>
+                    <div class="form-group">
+                        <label for="sampleSize">Target Sample Size:</label>
+                        <input type="number" id="sampleSize" min="50" max="1000" value="200">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal('createTestModal')">Cancel</button>
+                    <button class="btn-primary" onclick="createTest()">Create Test</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/mrt-engine.js"></script>
+</body>
+</html>

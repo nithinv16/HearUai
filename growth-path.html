@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growth Path - HearUAI</title>
+    <link rel="stylesheet" href="css/growth-path.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button id="backBtn" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1>Growth Path</h1>
+                <div class="header-actions">
+                    <button id="achievementsBtn" class="achievements-btn">
+                        <i class="fas fa-trophy"></i>
+                        <span class="achievement-badge" id="achievementBadge">3</span>
+                    </button>
+                    <button id="settingsBtn" class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Progress Overview -->
+            <section class="progress-overview">
+                <div class="level-card">
+                    <div class="level-info">
+                        <div class="level-number">
+                            <span id="currentLevel">12</span>
+                        </div>
+                        <div class="level-details">
+                            <h3>Mental Wellness Explorer</h3>
+                            <p>Keep growing your mental fitness!</p>
+                        </div>
+                    </div>
+                    <div class="xp-progress">
+                        <div class="xp-bar">
+                            <div class="xp-fill" id="xpFill" style="width: 65%;"></div>
+                        </div>
+                        <div class="xp-text">
+                            <span id="currentXP">1,250</span> / <span id="nextLevelXP">2,000</span> XP
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon energy">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="currentStreak">7</span>
+                            <span class="stat-label">Day Streak</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon wellness">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="totalSessions">45</span>
+                            <span class="stat-label">Sessions</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon growth">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="skillsUnlocked">8</span>
+                            <span class="stat-label">Skills</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon achievement">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="achievementsEarned">12</span>
+                            <span class="stat-label">Achievements</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mental Fitness Tree -->
+            <section class="fitness-tree-section">
+                <div class="section-header">
+                    <h2>Mental Fitness Tree</h2>
+                    <p>Grow your skills and unlock new abilities</p>
+                </div>
+                <div class="tree-container">
+                    <svg class="tree-svg" id="treeSvg" viewBox="0 0 800 600">
+                        <!-- Tree branches will be drawn here -->
+                    </svg>
+                    <div class="skill-nodes" id="skillNodes">
+                        <!-- Skill nodes will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Daily Challenges -->
+            <section class="challenges-section">
+                <div class="section-header">
+                    <h2>Daily Challenges</h2>
+                    <div class="challenge-timer">
+                        <i class="fas fa-clock"></i>
+                        <span id="challengeTimer">18:42:15</span>
+                    </div>
+                </div>
+                <div class="challenges-grid" id="challengesGrid">
+                    <!-- Challenges will be populated here -->
+                </div>
+            </section>
+
+            <!-- Rewards Shop -->
+            <section class="rewards-section">
+                <div class="section-header">
+                    <h2>Rewards Shop</h2>
+                    <div class="currency-display">
+                        <i class="fas fa-coins"></i>
+                        <span id="wellnessCoins">1,250</span> Wellness Coins
+                    </div>
+                </div>
+                <div class="rewards-grid" id="rewardsGrid">
+                    <!-- Rewards will be populated here -->
+                </div>
+            </section>
+
+            <!-- Recent Activities -->
+            <section class="activities-section">
+                <div class="section-header">
+                    <h2>Recent Activities</h2>
+                    <button id="viewAllActivities" class="view-all-btn">
+                        View All <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="activities-timeline" id="activitiesTimeline">
+                    <!-- Activities will be populated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div id="achievementsModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Achievements</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="achievements-tabs">
+                    <button class="tab-btn active" data-tab="earned">Earned</button>
+                    <button class="tab-btn" data-tab="available">Available</button>
+                    <button class="tab-btn" data-tab="locked">Locked</button>
+                </div>
+                <div class="achievements-content">
+                    <div class="tab-content active" id="earnedTab">
+                        <div class="achievements-grid" id="earnedAchievements">
+                            <!-- Earned achievements -->
+                        </div>
+                    </div>
+                    <div class="tab-content" id="availableTab">
+                        <div class="achievements-grid" id="availableAchievements">
+                            <!-- Available achievements -->
+                        </div>
+                    </div>
+                    <div class="tab-content" id="lockedTab">
+                        <div class="achievements-grid" id="lockedAchievements">
+                            <!-- Locked achievements -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skill Details Modal -->
+    <div id="skillModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="skillModalTitle">Skill Details</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="skill-details" id="skillDetails">
+                    <!-- Skill details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Challenge Details Modal -->
+    <div id="challengeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="challengeModalTitle">Challenge Details</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="challenge-details" id="challengeDetails">
+                    <!-- Challenge details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reward Purchase Modal -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="rewardModalTitle">Purchase Reward</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="reward-purchase" id="rewardPurchase">
+                    <!-- Reward purchase details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Growth Path Settings</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-form">
+                    <div class="setting-group">
+                        <h4>Notifications</h4>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="dailyChallengeNotifications">
+                                <span class="checkmark"></span>
+                                Daily Challenge Reminders
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="streakReminders">
+                                <span class="checkmark"></span>
+                                Streak Maintenance Reminders
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="achievementNotifications">
+                                <span class="checkmark"></span>
+                                Achievement Notifications
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h4>Privacy</h4>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="shareProgress">
+                                <span class="checkmark"></span>
+                                Share Progress with Support Network
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="anonymousLeaderboard">
+                                <span class="checkmark"></span>
+                                Participate in Anonymous Leaderboards
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h4>Difficulty</h4>
+                        <div class="setting-item">
+                            <label for="challengeDifficulty">Challenge Difficulty:</label>
+                            <select id="challengeDifficulty">
+                                <option value="easy">Easy</option>
+                                <option value="moderate" selected>Moderate</option>
+                                <option value="challenging">Challenging</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="saveGrowthSettings" class="save-settings-btn">
+                        <i class="fas fa-save"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/growth-path.js"></script>
+</body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Integration - HearuAI</title>
+    <link rel="stylesheet" href="css/life-integration.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="header-title">
+                    <h1>Life Integration</h1>
+                    <p>Connect your wellness journey with daily life</p>
+                </div>
+                <button class="settings-btn" onclick="openSettingsModal()">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Integration Status -->
+        <section class="integration-status">
+            <div class="status-grid">
+                <div class="status-card calendar-status">
+                    <div class="status-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Calendar</h3>
+                        <p class="status-text" id="calendar-status">Not Connected</p>
+                        <button class="connect-btn" onclick="connectCalendar()">Connect</button>
+                    </div>
+                </div>
+                <div class="status-card health-status">
+                    <div class="status-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Health Apps</h3>
+                        <p class="status-text" id="health-status">Not Connected</p>
+                        <button class="connect-btn" onclick="connectHealth()">Connect</button>
+                    </div>
+                </div>
+                <div class="status-card spotify-status">
+                    <div class="status-icon">
+                        <i class="fab fa-spotify"></i>
+                    </div>
+                    <div class="status-info">
+                        <h3>Spotify</h3>
+                        <p class="status-text" id="spotify-status">Not Connected</p>
+                        <button class="connect-btn" onclick="connectSpotify()">Connect</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Today's Integration -->
+        <section class="todays-integration">
+            <div class="section-header">
+                <h2>Today's Wellness Integration</h2>
+                <div class="date-display" id="current-date"></div>
+            </div>
+            <div class="integration-timeline">
+                <div class="timeline-item" id="morning-routine">
+                    <div class="timeline-time">8:00 AM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon morning">
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="timeline-info">
+                            <h4>Morning Wellness Check</h4>
+                            <p>Start your day with mindful breathing</p>
+                            <div class="timeline-actions">
+                                <button class="action-btn" onclick="startMorningRoutine()">Start</button>
+                                <button class="action-btn secondary" onclick="postponeRoutine('morning')">Later</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" id="work-break">
+                    <div class="timeline-time">2:00 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon work">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <div class="timeline-info">
+                            <h4>Mindful Work Break</h4>
+                            <p>Take a moment to reset and recharge</p>
+                            <div class="timeline-actions">
+                                <button class="action-btn" onclick="startWorkBreak()">Take Break</button>
+                                <button class="action-btn secondary" onclick="postponeRoutine('work')">Skip</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item" id="evening-reflection">
+                    <div class="timeline-time">8:00 PM</div>
+                    <div class="timeline-content">
+                        <div class="timeline-icon evening">
+                            <i class="fas fa-moon"></i>
+                        </div>
+                        <div class="timeline-info">
+                            <h4>Evening Reflection</h4>
+                            <p>Reflect on your day and set intentions</p>
+                            <div class="timeline-actions">
+                                <button class="action-btn" onclick="startEveningReflection()">Reflect</button>
+                                <button class="action-btn secondary" onclick="postponeRoutine('evening')">Later</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Smart Nudges -->
+        <section class="smart-nudges">
+            <div class="section-header">
+                <h2>Smart Wellness Nudges</h2>
+                <button class="refresh-btn" onclick="refreshNudges()">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="nudges-container" id="nudges-container">
+                <!-- Nudges will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Health Insights -->
+        <section class="health-insights">
+            <div class="section-header">
+                <h2>Health & Activity Insights</h2>
+                <div class="insights-filter">
+                    <button class="filter-btn active" data-filter="today">Today</button>
+                    <button class="filter-btn" data-filter="week">Week</button>
+                    <button class="filter-btn" data-filter="month">Month</button>
+                </div>
+            </div>
+            <div class="insights-grid">
+                <div class="insight-card steps">
+                    <div class="insight-icon">
+                        <i class="fas fa-walking"></i>
+                    </div>
+                    <div class="insight-data">
+                        <h3 id="steps-count">8,432</h3>
+                        <p>Steps Today</p>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 84%"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="insight-card heart-rate">
+                    <div class="insight-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="insight-data">
+                        <h3 id="heart-rate">72</h3>
+                        <p>Avg Heart Rate</p>
+                        <div class="trend positive">
+                            <i class="fas fa-arrow-up"></i> +3 bpm
+                        </div>
+                    </div>
+                </div>
+                <div class="insight-card sleep">
+                    <div class="insight-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <div class="insight-data">
+                        <h3 id="sleep-hours">7.5h</h3>
+                        <p>Sleep Duration</p>
+                        <div class="quality-indicator good">Good Quality</div>
+                    </div>
+                </div>
+                <div class="insight-card mood">
+                    <div class="insight-icon">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <div class="insight-data">
+                        <h3 id="mood-score">7.2</h3>
+                        <p>Mood Score</p>
+                        <div class="trend positive">
+                            <i class="fas fa-arrow-up"></i> +0.5
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Music Therapy -->
+        <section class="music-therapy">
+            <div class="section-header">
+                <h2>Personalized Music Therapy</h2>
+                <button class="shuffle-btn" onclick="shufflePlaylists()">
+                    <i class="fas fa-random"></i>
+                </button>
+            </div>
+            <div class="playlists-container">
+                <div class="playlist-card" data-mood="calm">
+                    <div class="playlist-cover">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="playlist-info">
+                        <h4>Calm & Focus</h4>
+                        <p>Ambient sounds for concentration</p>
+                        <div class="playlist-stats">
+                            <span><i class="fas fa-music"></i> 24 tracks</span>
+                            <span><i class="fas fa-clock"></i> 1h 32m</span>
+                        </div>
+                    </div>
+                    <button class="play-btn" onclick="playPlaylist('calm')">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+                <div class="playlist-card" data-mood="energize">
+                    <div class="playlist-cover">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="playlist-info">
+                        <h4>Energy Boost</h4>
+                        <p>Uplifting tracks to motivate</p>
+                        <div class="playlist-stats">
+                            <span><i class="fas fa-music"></i> 18 tracks</span>
+                            <span><i class="fas fa-clock"></i> 1h 8m</span>
+                        </div>
+                    </div>
+                    <button class="play-btn" onclick="playPlaylist('energize')">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+                <div class="playlist-card" data-mood="relax">
+                    <div class="playlist-cover">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <div class="playlist-info">
+                        <h4>Deep Relaxation</h4>
+                        <p>Soothing melodies for unwinding</p>
+                        <div class="playlist-stats">
+                            <span><i class="fas fa-music"></i> 20 tracks</span>
+                            <span><i class="fas fa-clock"></i> 1h 45m</span>
+                        </div>
+                    </div>
+                    <button class="play-btn" onclick="playPlaylist('relax')">
+                        <i class="fas fa-play"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Calendar Integration Modal -->
+    <div class="modal" id="calendar-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Connect Calendar</h3>
+                <button class="close-btn" onclick="closeModal('calendar-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="calendar-options">
+                    <button class="calendar-option" onclick="connectGoogleCalendar()">
+                        <i class="fab fa-google"></i>
+                        <span>Google Calendar</span>
+                    </button>
+                    <button class="calendar-option" onclick="connectOutlook()">
+                        <i class="fab fa-microsoft"></i>
+                        <span>Outlook Calendar</span>
+                    </button>
+                    <button class="calendar-option" onclick="connectAppleCalendar()">
+                        <i class="fab fa-apple"></i>
+                        <span>Apple Calendar</span>
+                    </button>
+                </div>
+                <div class="permissions-info">
+                    <h4>What we'll access:</h4>
+                    <ul>
+                        <li>View your calendar events</li>
+                        <li>Suggest wellness breaks between meetings</li>
+                        <li>Send mindful reminders before stressful events</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Apps Modal -->
+    <div class="modal" id="health-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Connect Health Apps</h3>
+                <button class="close-btn" onclick="closeModal('health-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="health-options">
+                    <button class="health-option" onclick="connectAppleHealth()">
+                        <i class="fas fa-heart"></i>
+                        <span>Apple Health</span>
+                    </button>
+                    <button class="health-option" onclick="connectGoogleFit()">
+                        <i class="fab fa-google"></i>
+                        <span>Google Fit</span>
+                    </button>
+                    <button class="health-option" onclick="connectFitbit()">
+                        <i class="fas fa-running"></i>
+                        <span>Fitbit</span>
+                    </button>
+                    <button class="health-option" onclick="connectGarmin()">
+                        <i class="fas fa-watch"></i>
+                        <span>Garmin Connect</span>
+                    </button>
+                </div>
+                <div class="permissions-info">
+                    <h4>Health data we'll use:</h4>
+                    <ul>
+                        <li>Heart rate and HRV for stress detection</li>
+                        <li>Sleep patterns for wellness timing</li>
+                        <li>Activity levels for motivation nudges</li>
+                        <li>Step count and exercise data</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spotify Integration Modal -->
+    <div class="modal" id="spotify-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Connect Spotify</h3>
+                <button class="close-btn" onclick="closeModal('spotify-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="spotify-connect">
+                    <div class="spotify-logo">
+                        <i class="fab fa-spotify"></i>
+                    </div>
+                    <h4>Personalized Music Therapy</h4>
+                    <p>Connect your Spotify account to receive mood-based music recommendations and create personalized wellness playlists.</p>
+                    <button class="spotify-auth-btn" onclick="authenticateSpotify()">
+                        <i class="fab fa-spotify"></i>
+                        Connect with Spotify
+                    </button>
+                </div>
+                <div class="permissions-info">
+                    <h4>What we'll do with your music:</h4>
+                    <ul>
+                        <li>Analyze your listening patterns</li>
+                        <li>Create mood-based playlists</li>
+                        <li>Suggest music for different wellness activities</li>
+                        <li>Control playback during guided sessions</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Integration Settings</h3>
+                <button class="close-btn" onclick="closeModal('settings-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>Notification Preferences</h4>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="calendar-nudges" checked>
+                            <span class="checkmark"></span>
+                            Calendar-based wellness nudges
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="health-alerts" checked>
+                            <span class="checkmark"></span>
+                            Health data alerts
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="music-suggestions">
+                            <span class="checkmark"></span>
+                            Automatic music suggestions
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4>Privacy Controls</h4>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="data-sharing">
+                            <span class="checkmark"></span>
+                            Share anonymized data for research
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="local-processing" checked>
+                            <span class="checkmark"></span>
+                            Process data locally when possible
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-actions">
+                    <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+                    <button class="reset-btn" onclick="resetSettings()">Reset to Default</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/life-integration.js"></script>
+</body>
+</html>

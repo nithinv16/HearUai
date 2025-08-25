@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Radar - HearUAI</title>
+    <link rel="stylesheet" href="css/mood-radar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button id="backBtn" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1>Mood Radar</h1>
+                <div class="header-actions">
+                    <button id="settingsBtn" class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    <button id="notificationsBtn" class="notifications-btn">
+                        <i class="fas fa-bell"></i>
+                        <span id="notificationBadge" class="notification-badge">3</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Current Mood Status -->
+            <section class="mood-status-section">
+                <div class="mood-status-card">
+                    <div class="status-header">
+                        <h2>Current Mood Status</h2>
+                        <div class="last-updated">
+                            <i class="fas fa-clock"></i>
+                            <span id="lastUpdated">Updated 5 minutes ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mood-visualization">
+                        <div class="mood-radar-chart">
+                            <canvas id="moodRadarCanvas" width="300" height="300"></canvas>
+                        </div>
+                        <div class="mood-metrics">
+                            <div class="metric">
+                                <div class="metric-icon energy">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <span class="metric-label">Energy</span>
+                                    <span class="metric-value" id="energyLevel">7.2</span>
+                                </div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-icon stress">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <span class="metric-label">Stress</span>
+                                    <span class="metric-value" id="stressLevel">4.1</span>
+                                </div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-icon mood">
+                                    <i class="fas fa-smile"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <span class="metric-label">Mood</span>
+                                    <span class="metric-value" id="moodLevel">6.8</span>
+                                </div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-icon focus">
+                                    <i class="fas fa-crosshairs"></i>
+                                </div>
+                                <div class="metric-info">
+                                    <span class="metric-label">Focus</span>
+                                    <span class="metric-value" id="focusLevel">5.9</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-check-in">
+                        <button id="quickCheckInBtn" class="quick-check-btn">
+                            <i class="fas fa-plus"></i>
+                            Quick Check-in
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- JITAI Nudges -->
+            <section class="jitai-section">
+                <div class="section-header">
+                    <h2>Smart Nudges</h2>
+                    <div class="nudge-controls">
+                        <button id="pauseNudgesBtn" class="control-btn">
+                            <i class="fas fa-pause"></i>
+                            Pause
+                        </button>
+                        <button id="customizeNudgesBtn" class="control-btn">
+                            <i class="fas fa-sliders-h"></i>
+                            Customize
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="nudges-container" id="nudgesContainer">
+                    <!-- Nudges will be dynamically populated -->
+                </div>
+            </section>
+
+            <!-- Mood Patterns -->
+            <section class="patterns-section">
+                <div class="section-header">
+                    <h2>Mood Patterns</h2>
+                    <div class="pattern-timeframe">
+                        <button class="timeframe-btn active" data-timeframe="day">Today</button>
+                        <button class="timeframe-btn" data-timeframe="week">Week</button>
+                        <button class="timeframe-btn" data-timeframe="month">Month</button>
+                    </div>
+                </div>
+                
+                <div class="patterns-grid">
+                    <div class="pattern-card">
+                        <div class="pattern-header">
+                            <h3>Daily Rhythm</h3>
+                            <i class="fas fa-sun"></i>
+                        </div>
+                        <div class="pattern-chart">
+                            <canvas id="dailyRhythmChart" width="250" height="150"></canvas>
+                        </div>
+                        <div class="pattern-insight">
+                            <p>Your mood typically peaks around 10 AM and dips after 3 PM.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <div class="pattern-header">
+                            <h3>Stress Triggers</h3>
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="trigger-list">
+                            <div class="trigger-item">
+                                <span class="trigger-name">Work meetings</span>
+                                <span class="trigger-impact high">High</span>
+                            </div>
+                            <div class="trigger-item">
+                                <span class="trigger-name">Social events</span>
+                                <span class="trigger-impact medium">Medium</span>
+                            </div>
+                            <div class="trigger-item">
+                                <span class="trigger-name">Weather changes</span>
+                                <span class="trigger-impact low">Low</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <div class="pattern-header">
+                            <h3>Recovery Activities</h3>
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <span class="activity-name">Meditation</span>
+                                <span class="activity-effectiveness">+2.3</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-name">Exercise</span>
+                                <span class="activity-effectiveness">+1.8</span>
+                            </div>
+                            <div class="activity-item">
+                                <span class="activity-name">Music</span>
+                                <span class="activity-effectiveness">+1.5</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Engagement Events -->
+            <section class="events-section">
+                <div class="section-header">
+                    <h2>Engagement Events</h2>
+                    <button id="createEventBtn" class="create-event-btn">
+                        <i class="fas fa-plus"></i>
+                        Create Event
+                    </button>
+                </div>
+                
+                <div class="events-timeline" id="eventsTimeline">
+                    <!-- Events will be dynamically populated -->
+                </div>
+            </section>
+
+            <!-- Digital Phenotyping Dashboard -->
+            <section class="phenotyping-section">
+                <div class="section-header">
+                    <h2>Digital Phenotyping</h2>
+                    <div class="privacy-indicator">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Privacy Protected</span>
+                    </div>
+                </div>
+                
+                <div class="phenotyping-grid">
+                    <div class="phenotype-card">
+                        <div class="phenotype-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="phenotype-content">
+                            <h4>Phone Usage</h4>
+                            <div class="phenotype-value">4.2h <span class="trend down">↓12%</span></div>
+                            <div class="phenotype-detail">Daily average</div>
+                            <div class="phenotype-insight">Reduced usage correlates with better mood</div>
+                        </div>
+                    </div>
+                    
+                    <div class="phenotype-card">
+                        <div class="phenotype-icon">
+                            <i class="fas fa-walking"></i>
+                        </div>
+                        <div class="phenotype-content">
+                            <h4>Activity Level</h4>
+                            <div class="phenotype-value">7,234 <span class="trend up">↑8%</span></div>
+                            <div class="phenotype-detail">Steps today</div>
+                            <div class="phenotype-insight">Higher activity predicts mood improvement</div>
+                        </div>
+                    </div>
+                    
+                    <div class="phenotype-card">
+                        <div class="phenotype-icon">
+                            <i class="fas fa-bed"></i>
+                        </div>
+                        <div class="phenotype-content">
+                            <h4>Sleep Pattern</h4>
+                            <div class="phenotype-value">7.5h <span class="trend neutral">→</span></div>
+                            <div class="phenotype-detail">Last night</div>
+                            <div class="phenotype-insight">Consistent sleep schedule detected</div>
+                        </div>
+                    </div>
+                    
+                    <div class="phenotype-card">
+                        <div class="phenotype-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="phenotype-content">
+                            <h4>Social Interaction</h4>
+                            <div class="phenotype-value">23 <span class="trend up">↑15%</span></div>
+                            <div class="phenotype-detail">Messages sent</div>
+                            <div class="phenotype-insight">Increased social engagement</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Privacy & Data Control -->
+            <section class="privacy-section">
+                <div class="section-header">
+                    <h2>Privacy & Data Control</h2>
+                    <button id="dataManagementBtn" class="data-management-btn">
+                        <i class="fas fa-cog"></i>
+                        Manage Data
+                    </button>
+                </div>
+                
+                <div class="privacy-grid">
+                    <div class="privacy-card">
+                        <div class="privacy-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <div class="privacy-content">
+                            <h4>On-Device Processing</h4>
+                            <p>All mood predictions happen locally on your device. Your data never leaves your phone.</p>
+                            <span class="privacy-status active">Active</span>
+                        </div>
+                    </div>
+                    
+                    <div class="privacy-card">
+                        <div class="privacy-icon">
+                            <i class="fas fa-user-secret"></i>
+                        </div>
+                        <div class="privacy-content">
+                            <h4>Anonymous Analytics</h4>
+                            <p>Only aggregated, non-identifiable patterns help improve the system.</p>
+                            <span class="privacy-status enabled">Enabled</span>
+                        </div>
+                    </div>
+                    
+                    <div class="privacy-card">
+                        <div class="privacy-icon">
+                            <i class="fas fa-eraser"></i>
+                        </div>
+                        <div class="privacy-content">
+                            <h4>Data Deletion</h4>
+                            <p>Delete all collected data at any time with complete removal guarantee.</p>
+                            <button class="btn-danger" onclick="showDataDeletion()">Delete Data</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Quick Check-in Modal -->
+    <div id="checkInModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Quick Mood Check-in</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="check-in-form">
+                    <div class="mood-sliders">
+                        <div class="slider-group">
+                            <label for="energySlider">Energy Level</label>
+                            <input type="range" id="energySlider" min="1" max="10" value="5" class="mood-slider energy">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>High</span>
+                            </div>
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label for="stressSlider">Stress Level</label>
+                            <input type="range" id="stressSlider" min="1" max="10" value="5" class="mood-slider stress">
+                            <div class="slider-labels">
+                                <span>Calm</span>
+                                <span>Stressed</span>
+                            </div>
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label for="moodSlider">Overall Mood</label>
+                            <input type="range" id="moodSlider" min="1" max="10" value="5" class="mood-slider mood">
+                            <div class="slider-labels">
+                                <span>Low</span>
+                                <span>High</span>
+                            </div>
+                        </div>
+                        
+                        <div class="slider-group">
+                            <label for="focusSlider">Focus Level</label>
+                            <input type="range" id="focusSlider" min="1" max="10" value="5" class="mood-slider focus">
+                            <div class="slider-labels">
+                                <span>Scattered</span>
+                                <span>Focused</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="context-tags">
+                        <h4>What's happening?</h4>
+                        <div class="tags-grid">
+                            <button class="context-tag" data-context="work">Work</button>
+                            <button class="context-tag" data-context="social">Social</button>
+                            <button class="context-tag" data-context="exercise">Exercise</button>
+                            <button class="context-tag" data-context="rest">Rest</button>
+                            <button class="context-tag" data-context="travel">Travel</button>
+                            <button class="context-tag" data-context="family">Family</button>
+                        </div>
+                    </div>
+                    
+                    <div class="notes-section">
+                        <label for="checkInNotes">Additional Notes (Optional)</label>
+                        <textarea id="checkInNotes" placeholder="How are you feeling? What's on your mind?"></textarea>
+                    </div>
+                    
+                    <button id="submitCheckInBtn" class="submit-check-in-btn">
+                        <i class="fas fa-check"></i>
+                        Submit Check-in
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Mood Radar Settings</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-form">
+                    <div class="setting-group">
+                        <h4>Notification Preferences</h4>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="enableNotifications" checked>
+                                <span class="checkmark"></span>
+                                Enable smart nudges
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="enableCheckInReminders" checked>
+                                <span class="checkmark"></span>
+                                Check-in reminders
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label for="nudgeFrequency">Nudge Frequency</label>
+                            <select id="nudgeFrequency">
+                                <option value="low">Low (1-2 per day)</option>
+                                <option value="medium" selected>Medium (3-5 per day)</option>
+                                <option value="high">High (6+ per day)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h4>Privacy & Data</h4>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="enableDataSharing">
+                                <span class="checkmark"></span>
+                                Share anonymized data for research
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <input type="checkbox" id="enableLocationTracking">
+                                <span class="checkmark"></span>
+                                Location-based insights
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h4>Intervention Preferences</h4>
+                        <div class="intervention-types">
+                            <label class="intervention-type">
+                                <input type="checkbox" id="breathingExercises" checked>
+                                <span class="checkmark"></span>
+                                Breathing exercises
+                            </label>
+                            <label class="intervention-type">
+                                <input type="checkbox" id="mindfulnessTips" checked>
+                                <span class="checkmark"></span>
+                                Mindfulness tips
+                            </label>
+                            <label class="intervention-type">
+                                <input type="checkbox" id="motivationalQuotes" checked>
+                                <span class="checkmark"></span>
+                                Motivational quotes
+                            </label>
+                            <label class="intervention-type">
+                                <input type="checkbox" id="activitySuggestions" checked>
+                                <span class="checkmark"></span>
+                                Activity suggestions
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button id="saveSettingsBtn" class="save-settings-btn">
+                        <i class="fas fa-save"></i>
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications Modal -->
+    <div id="notificationsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Recent Notifications</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="notifications-list" id="notificationsList">
+                    <!-- Notifications will be dynamically populated -->
+                </div>
+                <div class="notifications-actions">
+                    <button id="markAllReadBtn" class="mark-all-read-btn">
+                        Mark All as Read
+                    </button>
+                    <button id="clearNotificationsBtn" class="clear-notifications-btn">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Event Modal -->
+    <div id="createEventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Engagement Event</h3>
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="event-form">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title</label>
+                        <input type="text" id="eventTitle" placeholder="e.g., Morning Meditation">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventType">Event Type</label>
+                        <select id="eventType">
+                            <option value="reminder">Reminder</option>
+                            <option value="activity">Activity</option>
+                            <option value="check-in">Check-in</option>
+                            <option value="intervention">Intervention</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventTime">Time</label>
+                        <input type="time" id="eventTime">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventFrequency">Frequency</label>
+                        <select id="eventFrequency">
+                            <option value="once">Once</option>
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" placeholder="What should this event do?"></textarea>
+                    </div>
+                    
+                    <button id="createEventSubmitBtn" class="create-event-submit-btn">
+                        <i class="fas fa-plus"></i>
+                        Create Event
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/mood-radar.js"></script>
+</body>
+</html>

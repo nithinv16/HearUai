@@ -350,6 +350,123 @@ class ConversationHistoryManager {
   getRecentSessions(limit = 10) {
     return this.getAllSessions().slice(0, limit);
   }
+  
+  // Get comprehensive session context for new sessions
+  async getSessionContext(includeJournaling = true) {
+    const recentSessions = this.getRecentSessions(3);
+    const context = {
+      previousSessions: [],
+      overallProgress: null,
+      continuityPrompt: null,
+      journalContext: null
+    };
+    
+    // Process recent sessions
+    for (const session of recentSessions) {
+      if (session.summary) {
+        context.previousSessions.push({
+          date: new Date(session.startTime).toLocaleDateString(),
+          summary: session.summary,
+          mainTopics: session.summary.mainTopics || [],
+          emotionalTrend: session.summary.emotionalTrend,
+          keyInsights: session.summary.therapeuticInsights
+        });
+      }
+    }
+    
+    // Generate overall progress assessment
+    if (context.previousSessions.length > 0) {
+      context.overallProgress = await this.generateOverallProgress(context.previousSessions);
+    }
+    
+    // Include journaling context if available
+    if (includeJournaling && window.memoryManager?.emotionalMemory) {
+      try {
+        const recentJournalEntries = await window.memoryManager.emotionalMemory.getJournalEntries({
+          limit: 5,
+          sortBy: 'timestamp',
+          sortOrder: 'desc'
+        });
+        
+        if (recentJournalEntries.length > 0) {
+          context.journalContext = {
+            recentEntries: recentJournalEntries.map(entry => ({
+              date: new Date(entry.timestamp).toLocaleDateString(),
+              mood: entry.mood,
+              themes: entry.emotions || [],
+              summary: entry.content.substring(0, 200) + '...'
+            })),
+            patterns: await window.memoryManager.emotionalMemory.analyzeJournalPatterns()
+          };
+        }
+      } catch (error) {
+        console.warn('Failed to load journal context:', error);
+      }
+    }
+    
+    // Generate continuity prompt for AI
+    context.continuityPrompt = this.generateContinuityPrompt(context);
+    
+    return context;
+  }
+  
+  async generateOverallProgress(sessionSummaries) {
+    if (sessionSummaries.length === 0) return null;
+    
+    const progressPrompt = `Based on these recent therapy session summaries, provide an overall progress assessment:
+
+${sessionSummaries.map((s, i) => `Session ${i + 1} (${s.date}):
+- Topics: ${s.mainTopics.join(', ')}
+- Emotional trend: ${s.emotionalTrend}
+- Insights: ${s.keyInsights || 'None recorded'}`).join('\n\n')}
+
+Provide:
+1. Overall progress trajectory
+2. Recurring themes or patterns
+3. Areas of improvement
+4. Ongoing challenges
+5. Recommended focus areas`;
+    
+    try {
+      if (window.azureClient) {
+        const response = await window.azureClient.sendMessage(progressPrompt, [], {
+          responseType: 'progress_assessment',
+          maxTokens: 300
+        });
+        return response;
+      }
+    } catch (error) {
+      console.error('Overall progress generation error:', error);
+    }
+    
+    return null;
+  }
+  
+  generateContinuityPrompt(context) {
+    let prompt = "Previous session context:\n";
+    
+    if (context.previousSessions.length > 0) {
+      prompt += "Recent therapy sessions:\n";
+      context.previousSessions.forEach((session, i) => {
+        prompt += `${i + 1}. ${session.date}: ${session.summary.aiSummary || 'Session completed'} (Mood trend: ${session.emotionalTrend})\n`;
+      });
+    }
+    
+    if (context.journalContext && context.journalContext.recentEntries.length > 0) {
+      prompt += "\nRecent journal entries:\n";
+      context.journalContext.recentEntries.forEach((entry, i) => {
+        prompt += `${i + 1}. ${entry.date}: Mood was ${entry.mood}, themes: ${entry.themes.join(', ')}\n`;
+      });
+    }
+    
+    if (context.overallProgress) {
+      prompt += `\nOverall progress assessment: ${context.overallProgress}\n`;
+    }
+    
+    prompt += "\nPlease acknowledge this context and continue the therapeutic relationship naturally.";
+    
+    return prompt;
+  }
 
   // Get session by ID
   getSession(sessionId) {
@@ -448,7 +565,7 @@ class ConversationHistoryManager {
   }
 
   async generateSessionSummary(session) {
-    // Simple summary generation - can be enhanced with AI
+    // Enhanced AI-powered summary generation
     const messageCount = session.messages.length;
     const userMessages = session.messages.filter(m => m.isUser).length;
     const duration = session.endTime ? 
@@ -456,6 +573,22 @@ class ConversationHistoryManager {
     
     const topics = this.extractSessionTopics(session);
     const keyMoments = session.keyMoments.length;
+    const emotionalTrend = this.calculateEmotionalTrend(session.emotionalJourney);
+    
+    // Generate AI summary if Azure client is available
+    let aiSummary = null;
+    let therapeuticInsights = null;
+    let progressNotes = null;
+    
+    try {
+      if (window.azureClient && session.messages.length > 0) {
+        aiSummary = await this.generateAISummary(session);
+        therapeuticInsights = await this.generateTherapeuticInsights(session);
+        progressNotes = await this.generateProgressNotes(session);
+      }
+    } catch (error) {
+      console.warn('AI summary generation failed:', error);
+    }
     
     return {
       messageCount,
@@ -463,8 +596,96 @@ class ConversationHistoryManager {
       duration: `${duration} minutes`,
       mainTopics: topics.slice(0, 3),
       keyMoments,
-      emotionalTrend: this.calculateEmotionalTrend(session.emotionalJourney)
+      emotionalTrend,
+      aiSummary,
+      therapeuticInsights,
+      progressNotes,
+      generatedAt: new Date().toISOString()
     };
+  }
+  
+  async generateAISummary(session) {
+    const conversationText = session.messages
+      .map(m => `${m.isUser ? 'User' : 'AI'}: ${m.content}`)
+      .join('\n');
+    
+    const summaryPrompt = `Please provide a concise therapeutic summary of this conversation session. Focus on:
+1. Main topics discussed
+2. User's emotional state and progress
+3. Key insights or breakthroughs
+4. Therapeutic techniques used
+5. Areas for future focus
+
+Conversation:
+${conversationText.slice(-3000)}`; // Limit to last 3000 chars
+    
+    try {
+      const response = await window.azureClient.sendMessage(summaryPrompt, [], {
+        responseType: 'summary',
+        maxTokens: 300
+      });
+      return response;
+    } catch (error) {
+      console.error('AI summary generation error:', error);
+      return null;
+    }
+  }
+  
+  async generateTherapeuticInsights(session) {
+    const userMessages = session.messages
+      .filter(m => m.isUser)
+      .map(m => m.content)
+      .join(' ');
+    
+    const insightsPrompt = `Based on this user's messages, provide therapeutic insights including:
+1. Emotional patterns observed
+2. Coping mechanisms mentioned
+3. Potential areas of concern
+4. Strengths and resilience factors
+5. Recommended therapeutic approaches
+
+User messages: ${userMessages.slice(-2000)}`;
+    
+    try {
+      const response = await window.azureClient.sendMessage(insightsPrompt, [], {
+        responseType: 'analysis',
+        maxTokens: 250
+      });
+      return response;
+    } catch (error) {
+      console.error('Therapeutic insights generation error:', error);
+      return null;
+    }
+  }
+  
+  async generateProgressNotes(session) {
+    const sessionGoals = session.metadata.goals || [];
+    const emotionalJourney = session.emotionalJourney;
+    
+    if (sessionGoals.length === 0 && emotionalJourney.length === 0) {
+      return null;
+    }
+    
+    const progressPrompt = `Generate progress notes for this therapy session:
+Session Goals: ${sessionGoals.join(', ')}
+Emotional Journey: ${JSON.stringify(emotionalJourney.slice(-5))}
+
+Provide:
+1. Goal progress assessment
+2. Emotional regulation observations
+3. Behavioral changes noted
+4. Recommendations for next session`;
+    
+    try {
+      const response = await window.azureClient.sendMessage(progressPrompt, [], {
+        responseType: 'progress',
+        maxTokens: 200
+      });
+      return response;
+    } catch (error) {
+      console.error('Progress notes generation error:', error);
+      return null;
+    }
   }
 
   extractSessionTopics(session) {

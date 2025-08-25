@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Connections Test - HearuAI</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #ffd700;
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.pending {
+            background: #ffa500;
+            color: white;
+        }
+        .status.success {
+            background: #4caf50;
+            color: white;
+        }
+        .status.error {
+            background: #f44336;
+            color: white;
+        }
+        .test-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .test-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .log {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .overall-status {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 30px 0;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 HearuAI - AI Connections Test</h1>
+        
+        <div class="overall-status" id="overallStatus">
+            <span>Overall Status: </span>
+            <span class="status pending" id="overallStatusBadge">Not Tested</span>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 Configuration Test</h3>
+            <p>Testing Azure AI configuration and client initialization...</p>
+            <span class="status pending" id="configStatus">Pending</span>
+            <button class="test-button" onclick="testConfiguration()">Test Configuration</button>
+            <div class="log" id="configLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>💬 Chat AI Integration</h3>
+            <p>Testing Azure OpenAI chat functionality...</p>
+            <span class="status pending" id="chatStatus">Pending</span>
+            <button class="test-button" onclick="testChatAI()">Test Chat AI</button>
+            <div class="log" id="chatLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>👥 Group Therapy AI</h3>
+            <p>Testing AI moderation and crisis detection...</p>
+            <span class="status pending" id="groupTherapyStatus">Pending</span>
+            <button class="test-button" onclick="testGroupTherapyAI()">Test Group Therapy AI</button>
+            <div class="log" id="groupTherapyLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Measurement Care AI</h3>
+            <p>Testing conversational assessments...</p>
+            <span class="status pending" id="measurementStatus">Pending</span>
+            <button class="test-button" onclick="testMeasurementAI()">Test Measurement AI</button>
+            <div class="log" id="measurementLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 Mood Radar AI</h3>
+            <p>Testing JITAI nudges and mood analysis...</p>
+            <span class="status pending" id="moodRadarStatus">Pending</span>
+            <button class="test-button" onclick="testMoodRadarAI()">Test Mood Radar AI</button>
+            <div class="log" id="moodRadarLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🫁 HRV Breath Coach AI</h3>
+            <p>Testing personalized breathing guidance...</p>
+            <span class="status pending" id="hrvStatus">Pending</span>
+            <button class="test-button" onclick="testHRVAI()">Test HRV AI</button>
+            <div class="log" id="hrvLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🎯 MRT Engine AI</h3>
+            <p>Testing intervention optimization...</p>
+            <span class="status pending" id="mrtStatus">Pending</span>
+            <button class="test-button" onclick="testMRTAI()">Test MRT AI</button>
+            <div class="log" id="mrtLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>💭 Emotional Memory AI</h3>
+            <p>Testing pattern analysis and insights...</p>
+            <span class="status pending" id="emotionalStatus">Pending</span>
+            <button class="test-button" onclick="testEmotionalMemoryAI()">Test Emotional Memory AI</button>
+            <div class="log" id="emotionalLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 Smart Journal AI</h3>
+            <p>Testing emotion analysis and affirmations...</p>
+            <span class="status pending" id="journalStatus">Pending</span>
+            <button class="test-button" onclick="testSmartJournalAI()">Test Smart Journal AI</button>
+            <div class="log" id="journalLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🌱 Growth Path AI</h3>
+            <p>Testing skill recommendations and achievement insights...</p>
+            <span class="status pending" id="growthStatus">Pending</span>
+            <button class="test-button" onclick="testGrowthPathAI()">Test Growth Path AI</button>
+            <div class="log" id="growthLog" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>🔗 Life Integration AI</h3>
+            <p>Testing wellness nudges and recommendations...</p>
+            <span class="status pending" id="lifeIntegrationStatus">Pending</span>
+            <button class="test-button" onclick="testLifeIntegrationAI()">Test Life Integration AI</button>
+            <div class="log" id="lifeIntegrationLog" style="display: none;"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="test-button" onclick="runAllTests()" style="font-size: 18px; padding: 15px 30px;">🚀 Run All Tests</button>
+        </div>
+    </div>
+
+    <!-- Include all necessary scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/azure-ai.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/group-therapy.js"></script>
+    <script src="js/measurement-care.js"></script>
+    <script src="js/mood-radar.js"></script>
+    <script src="js/hrv-breath-coach.js"></script>
+    <script src="js/mrt-engine.js"></script>
+    <script src="js/emotional-memory.js"></script>
+    <script src="js/smart-journal.js"></script>
+    <script src="js/growth-path.js"></script>
+    <script src="js/life-integration.js"></script>
+
+    <script>
+        let testResults = {};
+        let totalTests = 11;
+        let completedTests = 0;
+
+        function updateStatus(testId, status, message = '') {
+            const statusElement = document.getElementById(testId + 'Status');
+            const logElement = document.getElementById(testId + 'Log');
+            
+            statusElement.className = `status ${status}`;
+            statusElement.textContent = status === 'success' ? 'Success' : status === 'error' ? 'Failed' : 'Pending';
+            
+            if (message) {
+                logElement.style.display = 'block';
+                logElement.innerHTML += `<div>${new Date().toLocaleTimeString()}: ${message}</div>`;
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+            
+            testResults[testId] = status;
+            updateOverallStatus();
+        }
+
+        function updateOverallStatus() {
+            const successCount = Object.values(testResults).filter(status => status === 'success').length;
+            const errorCount = Object.values(testResults).filter(status => status === 'error').length;
+            const totalCompleted = successCount + errorCount;
+            
+            const overallBadge = document.getElementById('overallStatusBadge');
+            
+            if (totalCompleted === 0) {
+                overallBadge.className = 'status pending';
+                overallBadge.textContent = 'Not Tested';
+            } else if (errorCount === 0 && successCount === totalTests) {
+                overallBadge.className = 'status success';
+                overallBadge.textContent = 'All Tests Passed';
+            } else if (errorCount > 0) {
+                overallBadge.className = 'status error';
+                overallBadge.textContent = `${errorCount} Failed, ${successCount} Passed`;
+            } else {
+                overallBadge.className = 'status pending';
+                overallBadge.textContent = `${successCount}/${totalTests} Completed`;
+            }
+        }
+
+        async function testConfiguration() {
+            updateStatus('config', 'pending', 'Testing Azure configuration...');
+            
+            try {
+                if (!window.AZURE_CONFIG) {
+                    throw new Error('AZURE_CONFIG not found');
+                }
+                
+                updateStatus('config', 'pending', 'Configuration found, checking API keys...');
+                
+                if (!window.AZURE_CONFIG.openai.apiKey || window.AZURE_CONFIG.openai.apiKey.includes('your_')) {
+                    throw new Error('Azure OpenAI API key not configured');
+                }
+                
+                if (!window.AzureAIClient) {
+                    throw new Error('AzureAIClient class not found');
+                }
+                
+                const client = new window.AzureAIClient(window.AZURE_CONFIG.openai, window.AZURE_CONFIG);
+                updateStatus('config', 'pending', 'Azure AI client created successfully');
+                
+                if (client.isConfigured) {
+                    updateStatus('config', 'success', 'Configuration test passed!');
+                } else {
+                    throw new Error('Azure AI client configuration validation failed');
+                }
+                
+            } catch (error) {
+                updateStatus('config', 'error', `Configuration test failed: ${error.message}`);
+            }
+        }
+
+        async function testChatAI() {
+            updateStatus('chat', 'pending', 'Testing Chat AI integration...');
+            
+            try {
+                if (!window.AzureAIClient) {
+                    throw new Error('AzureAIClient not available');
+                }
+                
+                const client = new window.AzureAIClient(window.AZURE_CONFIG.openai, window.AZURE_CONFIG);
+                updateStatus('chat', 'pending', 'Sending test message to Azure OpenAI...');
+                
+                const response = await client.generateResponse('Hello, this is a test message. Please respond with "Test successful".');
+                
+                if (response && response.length > 0) {
+                    updateStatus('chat', 'success', `Chat AI test passed! Response: ${response.substring(0, 100)}...`);
+                } else {
+                    throw new Error('Empty response from Azure OpenAI');
+                }
+                
+            } catch (error) {
+                updateStatus('chat', 'error', `Chat AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testGroupTherapyAI() {
+            updateStatus('groupTherapy', 'pending', 'Testing Group Therapy AI...');
+            
+            try {
+                const groupTherapy = new GroupTherapySpaces();
+                await groupTherapy.initializeAzureClient();
+                
+                if (groupTherapy.azureClient) {
+                    updateStatus('groupTherapy', 'pending', 'Testing crisis detection...');
+                    
+                    // Test crisis detection
+                    const testMessage = "I'm feeling really overwhelmed and don't know what to do.";
+                    const crisisResult = await groupTherapy.detectCrisis(testMessage);
+                    
+                    updateStatus('groupTherapy', 'success', 'Group Therapy AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('groupTherapy', 'error', `Group Therapy AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testMeasurementAI() {
+            updateStatus('measurement', 'pending', 'Testing Measurement Care AI...');
+            
+            try {
+                const measurementCare = new MeasurementBasedCare();
+                await measurementCare.initializeAzureClient();
+                
+                if (measurementCare.azureClient) {
+                    updateStatus('measurement', 'success', 'Measurement Care AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('measurement', 'error', `Measurement Care AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testMoodRadarAI() {
+            updateStatus('moodRadar', 'pending', 'Testing Mood Radar AI...');
+            
+            try {
+                const moodRadar = new MoodRadar();
+                await moodRadar.initializeAzureClient();
+                
+                if (moodRadar.azureClient) {
+                    updateStatus('moodRadar', 'success', 'Mood Radar AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('moodRadar', 'error', `Mood Radar AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testHRVAI() {
+            updateStatus('hrv', 'pending', 'Testing HRV Breath Coach AI...');
+            
+            try {
+                const hrvCoach = new HRVBreathCoach();
+                await hrvCoach.initializeAzureClient();
+                
+                if (hrvCoach.azureClient) {
+                    updateStatus('hrv', 'success', 'HRV Breath Coach AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('hrv', 'error', `HRV Breath Coach AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testMRTAI() {
+            updateStatus('mrt', 'pending', 'Testing MRT Engine AI...');
+            
+            try {
+                const mrtEngine = new MRTEngine();
+                await mrtEngine.initializeAzureClient();
+                
+                if (mrtEngine.azureClient) {
+                    updateStatus('mrt', 'success', 'MRT Engine AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('mrt', 'error', `MRT Engine AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testEmotionalMemoryAI() {
+            updateStatus('emotional', 'pending', 'Testing Emotional Memory AI...');
+            
+            try {
+                const emotionalMemory = new EmotionalMemory();
+                await emotionalMemory.initializeAzureClient();
+                
+                if (emotionalMemory.azureClient) {
+                    updateStatus('emotional', 'success', 'Emotional Memory AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('emotional', 'error', `Emotional Memory AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testSmartJournalAI() {
+            updateStatus('journal', 'pending', 'Testing Smart Journal AI...');
+            
+            try {
+                const smartJournal = new SmartJournal();
+                await smartJournal.initializeAzureClient();
+                
+                if (smartJournal.azureClient) {
+                    updateStatus('journal', 'success', 'Smart Journal AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('journal', 'error', `Smart Journal AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testGrowthPathAI() {
+            updateStatus('growth', 'pending', 'Testing Growth Path AI...');
+            
+            try {
+                const growthPath = new GrowthPathSystem();
+                await growthPath.initializeAzureClient();
+                
+                if (growthPath.azureClient) {
+                    updateStatus('growth', 'success', 'Growth Path AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('growth', 'error', `Growth Path AI test failed: ${error.message}`);
+            }
+        }
+
+        async function testLifeIntegrationAI() {
+            updateStatus('lifeIntegration', 'pending', 'Testing Life Integration AI...');
+            
+            try {
+                const lifeIntegration = new LifeIntegration();
+                await lifeIntegration.initializeAzureClient();
+                
+                if (lifeIntegration.azureClient) {
+                    updateStatus('lifeIntegration', 'success', 'Life Integration AI integration working!');
+                } else {
+                    throw new Error('Azure client not initialized');
+                }
+                
+            } catch (error) {
+                updateStatus('lifeIntegration', 'error', `Life Integration AI test failed: ${error.message}`);
+            }
+        }
+
+        async function runAllTests() {
+            const tests = [
+                testConfiguration,
+                testChatAI,
+                testGroupTherapyAI,
+                testMeasurementAI,
+                testMoodRadarAI,
+                testHRVAI,
+                testMRTAI,
+                testEmotionalMemoryAI,
+                testSmartJournalAI,
+                testGrowthPathAI,
+                testLifeIntegrationAI
+            ];
+
+            for (const test of tests) {
+                await test();
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+        }
+
+        // Auto-run configuration test on page load
+        window.addEventListener('load', () => {
+            setTimeout(testConfiguration, 1000);
+        });
+    </script>
+</body>
+</html>

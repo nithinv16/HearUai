@@ -25,6 +25,7 @@ class HearUAIChat {
     this.translationService = null; // Will be initialized after configuration is loaded
     this.userLanguage = 'en'; // Default language
     this.aiResponseLanguage = 'en'; // Language for AI responses
+    this.journalingManager = null; // Will be initialized after memory manager is ready
     
     this.initializeElements();
     this.initializeEventListeners();
@@ -36,6 +37,8 @@ class HearUAIChat {
     // Initialize proactive engagement after a delay to ensure memory manager is ready
     setTimeout(() => {
       this.initializeProactiveEngagement();
+      // Initialize journaling manager after memory manager is ready
+      this.initializeJournalingManager();
     }, 3000);
   }
 
@@ -254,6 +257,13 @@ class HearUAIChat {
       const copingStrategies = this.identifyCopingStrategies(message);
       if (copingStrategies.length > 0) {
         await this.storeCopingStrategies(copingStrategies);
+      }
+
+      // Check for journaling intent and suggest if appropriate
+      if (this.journalingManager && this.journalingManager.detectJournalingIntent(message)) {
+        setTimeout(() => {
+          this.suggestJournaling(message, sentiment);
+        }, 2000); // Suggest after a brief delay
       }
 
       // Detect relationship patterns
@@ -813,8 +823,12 @@ class HearUAIChat {
       if (recentSessions.length > 0) {
         console.log(`Loaded ${recentSessions.length} previous conversation sessions`);
         
-        // Display recent session info in chat if helpful
-        this.displaySessionHistory(recentSessions);
+        // Get comprehensive session context
+        const sessionContext = await this.conversationHistoryManager.getSessionContext(true);
+        this.sessionContext = sessionContext;
+        
+        // Display enhanced session history in chat
+        this.displayEnhancedSessionHistory(sessionContext);
       }
     } catch (error) {
       console.error('Error loading previous conversations:', error);
@@ -832,6 +846,32 @@ class HearUAIChat {
     console.log(`Started new session: ${this.currentSessionId}`);
   }
 
+  displayEnhancedSessionHistory(sessionContext) {
+    if (!sessionContext || sessionContext.previousSessions.length === 0) return;
+    
+    let historyMessage = `Welcome back! I can see we've had ${sessionContext.previousSessions.length} recent session${sessionContext.previousSessions.length > 1 ? 's' : ''}. `;
+    
+    // Add brief context about recent sessions
+    if (sessionContext.previousSessions.length > 0) {
+      const lastSession = sessionContext.previousSessions[0];
+      historyMessage += `Our last session on ${lastSession.date} focused on ${lastSession.mainTopics.slice(0, 2).join(' and ')}.`;
+    }
+    
+    // Add journal context if available
+    if (sessionContext.journalContext && sessionContext.journalContext.recentEntries.length > 0) {
+      const recentEntry = sessionContext.journalContext.recentEntries[0];
+      historyMessage += ` I also notice you've been journaling recently, with your last entry on ${recentEntry.date} reflecting a ${recentEntry.mood} mood.`;
+    }
+    
+    historyMessage += " I'm here to continue supporting you. How are you feeling today?";
+    
+    this.addMessage(historyMessage, false, {
+      isSystemMessage: true,
+      timestamp: new Date().toISOString(),
+      hasSessionContext: true
+    });
+  }
+  
   displaySessionHistory(recentSessions) {
     if (recentSessions.length === 0) return;
     
@@ -844,6 +884,15 @@ class HearUAIChat {
 
   buildEnhancedHistory(relevantMemories, userContext) {
     let enhancedHistory = [...this.conversationHistory.slice(-10)];
+    
+    // Add session context if available
+    if (this.sessionContext && this.sessionContext.continuityPrompt) {
+      const sessionContextMessage = {
+        role: 'system',
+        content: this.sessionContext.continuityPrompt
+      };
+      enhancedHistory.unshift(sessionContextMessage);
+    }
     
     if (relevantMemories.length > 0) {
       const memoryContext = {
@@ -1685,6 +1734,46 @@ class HearUAIChat {
     
     // Time-based triggers (morning, afternoon, evening)
     this.setupTimeBasedTriggers();
+  }
+
+  initializeJournalingManager() {
+    try {
+      if (this.memoryManager && typeof JournalingManager !== 'undefined') {
+        this.journalingManager = new JournalingManager(this.memoryManager, this);
+        console.log('Journaling manager initialized successfully');
+      } else {
+        console.warn('Cannot initialize journaling manager: dependencies not ready');
+      }
+    } catch (error) {
+      console.error('Failed to initialize journaling manager:', error);
+    }
+  }
+
+  suggestJournaling(message, sentiment) {
+    if (!this.journalingManager) return;
+    
+    const suggestion = this.journalingManager.suggestJournaling();
+    const journalSuggestionHTML = `
+      <div class="journal-suggestion">
+        <div class="journal-suggestion-content">
+          <div class="journal-suggestion-title">💭 Journaling Suggestion</div>
+          <div class="journal-suggestion-text">${suggestion}</div>
+          <button class="start-journaling-btn" onclick="hearuaiChat.journalingManager.openJournalingModal()">Start Journaling</button>
+        </div>
+      </div>
+    `;
+    
+    // Add suggestion to chat
+    this.addSystemMessage(journalSuggestionHTML);
+  }
+
+  addSystemMessage(content) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'message system-message';
+    messageDiv.innerHTML = content;
+    
+    this.chatMessages?.appendChild(messageDiv);
+    this.chatMessages?.scrollTo(0, this.chatMessages.scrollHeight);
   }
 
   async checkProactiveEngagementTriggers() {

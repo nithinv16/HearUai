@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Therapy Spaces - HearuAI</title>
+    <link rel="stylesheet" href="css/group-therapy.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <div class="header-title">
+                    <h1>Group Therapy Spaces</h1>
+                    <p>Connect with others in safe, moderated support rooms</p>
+                </div>
+                <div class="header-actions">
+                    <button class="notification-btn" onclick="toggleNotifications()">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notification-count">3</span>
+                    </button>
+                    <button class="settings-btn" onclick="openSettingsModal()">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Quick Stats -->
+        <section class="quick-stats">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="active-rooms">12</h3>
+                        <p>Active Rooms</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="online-members">47</h3>
+                        <p>Online Members</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="support-given">156</h3>
+                        <p>Support Given</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>100%</h3>
+                        <p>Safe & Moderated</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Room Categories -->
+        <section class="room-categories">
+            <div class="section-header">
+                <h2>Support Room Categories</h2>
+                <button class="create-room-btn" onclick="openCreateRoomModal()">
+                    <i class="fas fa-plus"></i>
+                    Create Room
+                </button>
+            </div>
+            <div class="categories-grid">
+                <div class="category-card" data-category="anxiety">
+                    <div class="category-icon">
+                        <i class="fas fa-cloud-rain"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Anxiety Support</h3>
+                        <p>Share coping strategies and find comfort in understanding</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-users"></i> 3 rooms</span>
+                            <span><i class="fas fa-user"></i> 18 members</span>
+                        </div>
+                    </div>
+                    <button class="join-category-btn" onclick="showCategoryRooms('anxiety')">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="category-card" data-category="depression">
+                    <div class="category-icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Depression Support</h3>
+                        <p>Find hope and encouragement from those who understand</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-users"></i> 4 rooms</span>
+                            <span><i class="fas fa-user"></i> 23 members</span>
+                        </div>
+                    </div>
+                    <button class="join-category-btn" onclick="showCategoryRooms('depression')">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="category-card" data-category="grief">
+                    <div class="category-icon">
+                        <i class="fas fa-dove"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Grief & Loss</h3>
+                        <p>Navigate loss with compassionate peer support</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-users"></i> 2 rooms</span>
+                            <span><i class="fas fa-user"></i> 12 members</span>
+                        </div>
+                    </div>
+                    <button class="join-category-btn" onclick="showCategoryRooms('grief')">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="category-card" data-category="relationships">
+                    <div class="category-icon">
+                        <i class="fas fa-heart-broken"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Relationships</h3>
+                        <p>Work through relationship challenges together</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-users"></i> 2 rooms</span>
+                            <span><i class="fas fa-user"></i> 15 members</span>
+                        </div>
+                    </div>
+                    <button class="join-category-btn" onclick="showCategoryRooms('relationships')">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="category-card" data-category="addiction">
+                    <div class="category-icon">
+                        <i class="fas fa-fist-raised"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>Addiction Recovery</h3>
+                        <p>Support each other on the journey to recovery</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-users"></i> 3 rooms</span>
+                            <span><i class="fas fa-user"></i> 21 members</span>
+                        </div>
+                    </div>
+                    <button class="join-category-btn" onclick="showCategoryRooms('addiction')">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="category-card" data-category="general">
+                    <div class="category-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="category-info">
+                        <h3>General Support</h3>
+                        <p>Open space for any mental health discussion</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-users"></i> 5 rooms</span>
+                            <span><i class="fas fa-user"></i> 32 members</span>
+                        </div>
+                    </div>
+                    <button class="join-category-btn" onclick="showCategoryRooms('general')">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Rooms -->
+        <section class="active-rooms">
+            <div class="section-header">
+                <h2>Currently Active Rooms</h2>
+                <div class="room-filters">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="joined">Joined</button>
+                    <button class="filter-btn" data-filter="recommended">Recommended</button>
+                </div>
+            </div>
+            <div class="rooms-grid" id="rooms-container">
+                <!-- Rooms will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Guided Activities -->
+        <section class="guided-activities">
+            <div class="section-header">
+                <h2>Guided Group Activities</h2>
+                <p>AI-facilitated sessions for structured support</p>
+            </div>
+            <div class="activities-grid">
+                <div class="activity-card" data-activity="mindfulness">
+                    <div class="activity-time">Next: 3:00 PM</div>
+                    <div class="activity-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="activity-info">
+                        <h3>Group Mindfulness</h3>
+                        <p>Guided meditation and breathing exercises</p>
+                        <div class="activity-details">
+                            <span><i class="fas fa-clock"></i> 30 min</span>
+                            <span><i class="fas fa-users"></i> 8/12 joined</span>
+                        </div>
+                    </div>
+                    <button class="join-activity-btn" onclick="joinActivity('mindfulness')">
+                        Join Session
+                    </button>
+                </div>
+                <div class="activity-card" data-activity="gratitude">
+                    <div class="activity-time">Next: 5:30 PM</div>
+                    <div class="activity-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="activity-info">
+                        <h3>Gratitude Circle</h3>
+                        <p>Share what you're grateful for in a supportive circle</p>
+                        <div class="activity-details">
+                            <span><i class="fas fa-clock"></i> 45 min</span>
+                            <span><i class="fas fa-users"></i> 5/10 joined</span>
+                        </div>
+                    </div>
+                    <button class="join-activity-btn" onclick="joinActivity('gratitude')">
+                        Join Session
+                    </button>
+                </div>
+                <div class="activity-card" data-activity="coping">
+                    <div class="activity-time">Next: 7:00 PM</div>
+                    <div class="activity-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="activity-info">
+                        <h3>Coping Strategies</h3>
+                        <p>Learn and share effective coping techniques</p>
+                        <div class="activity-details">
+                            <span><i class="fas fa-clock"></i> 60 min</span>
+                            <span><i class="fas fa-users"></i> 12/15 joined</span>
+                        </div>
+                    </div>
+                    <button class="join-activity-btn" onclick="joinActivity('coping')">
+                        Join Session
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- My Rooms -->
+        <section class="my-rooms">
+            <div class="section-header">
+                <h2>My Rooms</h2>
+                <p>Rooms you've joined or created</p>
+            </div>
+            <div class="my-rooms-list" id="my-rooms-container">
+                <!-- User's rooms will be populated by JavaScript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Room Details Modal -->
+    <div class="modal" id="room-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="room-modal-title">Room Details</h3>
+                <button class="close-btn" onclick="closeModal('room-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="room-modal-body">
+                <!-- Room details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Room Modal -->
+    <div class="modal" id="create-room-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Support Room</h3>
+                <button class="close-btn" onclick="closeModal('create-room-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="create-room-form">
+                    <div class="form-group">
+                        <label for="room-name">Room Name</label>
+                        <input type="text" id="room-name" placeholder="Enter room name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="room-category">Category</label>
+                        <select id="room-category" required>
+                            <option value="">Select category</option>
+                            <option value="anxiety">Anxiety Support</option>
+                            <option value="depression">Depression Support</option>
+                            <option value="grief">Grief & Loss</option>
+                            <option value="relationships">Relationships</option>
+                            <option value="addiction">Addiction Recovery</option>
+                            <option value="general">General Support</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="room-description">Description</label>
+                        <textarea id="room-description" placeholder="Describe the purpose of this room" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="room-privacy">Privacy Level</label>
+                        <select id="room-privacy" required>
+                            <option value="public">Public - Anyone can join</option>
+                            <option value="invite">Invite Only - Requires invitation</option>
+                            <option value="moderated">Moderated - Requires approval</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="max-members">Maximum Members</label>
+                        <input type="number" id="max-members" min="2" max="50" value="15">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel-btn" onclick="closeModal('create-room-modal')">Cancel</button>
+                        <button type="submit" class="create-btn">Create Room</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Room Modal -->
+    <div class="modal" id="join-room-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="join-room-title">Join Room</h3>
+                <button class="close-btn" onclick="closeModal('join-room-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="room-preview" id="join-room-preview">
+                    <!-- Room preview will be populated by JavaScript -->
+                </div>
+                <div class="community-guidelines">
+                    <h4>Community Guidelines</h4>
+                    <ul>
+                        <li>Be respectful and supportive to all members</li>
+                        <li>Maintain confidentiality and privacy</li>
+                        <li>No judgment or criticism of others' experiences</li>
+                        <li>Share resources and coping strategies positively</li>
+                        <li>Report any inappropriate behavior to moderators</li>
+                    </ul>
+                    <label class="agreement-checkbox">
+                        <input type="checkbox" id="guidelines-agreement">
+                        <span class="checkmark"></span>
+                        I agree to follow the community guidelines
+                    </label>
+                </div>
+                <div class="join-actions">
+                    <button class="cancel-btn" onclick="closeModal('join-room-modal')">Cancel</button>
+                    <button class="join-btn" onclick="confirmJoinRoom()" disabled>Join Room</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Group Therapy Settings</h3>
+                <button class="close-btn" onclick="closeModal('settings-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>Privacy & Safety</h4>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="anonymous-mode" checked>
+                            <span class="checkmark"></span>
+                            Anonymous mode (hide real name)
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="auto-moderation" checked>
+                            <span class="checkmark"></span>
+                            Enhanced AI moderation
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="crisis-detection" checked>
+                            <span class="checkmark"></span>
+                            Crisis detection and intervention
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4>Notifications</h4>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="room-notifications" checked>
+                            <span class="checkmark"></span>
+                            Room activity notifications
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="activity-reminders">
+                            <span class="checkmark"></span>
+                            Guided activity reminders
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="support-requests">
+                            <span class="checkmark"></span>
+                            Support request alerts
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <h4>Participation</h4>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="auto-join-activities">
+                            <span class="checkmark"></span>
+                            Auto-join recommended activities
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="setting-label">
+                            <input type="checkbox" id="share-progress">
+                            <span class="checkmark"></span>
+                            Share wellness progress with groups
+                        </label>
+                    </div>
+                </div>
+                <div class="settings-actions">
+                    <button class="save-btn" onclick="saveSettings()">Save Settings</button>
+                    <button class="reset-btn" onclick="resetSettings()">Reset to Default</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Interface (Hidden by default) -->
+    <div class="chat-interface" id="chat-interface">
+        <div class="chat-header">
+            <div class="room-info">
+                <h3 id="chat-room-name">Room Name</h3>
+                <p id="chat-room-members">12 members online</p>
+            </div>
+            <div class="chat-actions">
+                <button class="minimize-btn" onclick="minimizeChat()">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="close-chat-btn" onclick="closeChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be populated by JavaScript -->
+        </div>
+        <div class="chat-input-area">
+            <div class="ai-moderator-status">
+                <i class="fas fa-shield-alt"></i>
+                <span>AI Moderator Active</span>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" id="chat-input" placeholder="Type your message...">
+                <button class="send-btn" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/group-therapy.js"></script>
+</body>
+</html>

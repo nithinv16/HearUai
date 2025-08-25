@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Journal - HearUAI</title>
+    <link rel="stylesheet" href="css/smart-journal.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <button class="back-btn" onclick="window.location.href='index.html'">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1>Smart Journal</h1>
+                <div class="header-actions">
+                    <button class="insights-btn" id="insightsBtn">
+                        <i class="fas fa-lightbulb"></i>
+                        Insights
+                    </button>
+                    <button class="export-btn" id="exportBtn">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Journal Entry Section -->
+            <section class="journal-entry-section">
+                <div class="entry-header">
+                    <h2>How are you feeling today?</h2>
+                    <div class="entry-date">
+                        <i class="fas fa-calendar"></i>
+                        <span id="currentDate"></span>
+                    </div>
+                </div>
+
+                <!-- Voice Input Controls -->
+                <div class="voice-controls">
+                    <button class="voice-btn" id="voiceBtn">
+                        <i class="fas fa-microphone"></i>
+                        <span>Tap to speak</span>
+                    </button>
+                    <div class="voice-status" id="voiceStatus"></div>
+                </div>
+
+                <!-- Text Input -->
+                <div class="text-input-section">
+                    <textarea 
+                        id="journalText" 
+                        placeholder="Share your thoughts, feelings, or experiences... You can type here or use voice input above."
+                        rows="8"
+                    ></textarea>
+                    <div class="input-tools">
+                        <div class="word-count">
+                            <span id="wordCount">0</span> words
+                        </div>
+                        <div class="input-actions">
+                            <button class="clear-btn" id="clearBtn">
+                                <i class="fas fa-trash"></i>
+                                Clear
+                            </button>
+                            <button class="save-draft-btn" id="saveDraftBtn">
+                                <i class="fas fa-save"></i>
+                                Save Draft
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emotion Detection -->
+                <div class="emotion-analysis" id="emotionAnalysis" style="display: none;">
+                    <h3>Detected Emotions</h3>
+                    <div class="emotion-tags" id="emotionTags"></div>
+                    <div class="emotion-intensity">
+                        <label>Overall Intensity:</label>
+                        <div class="intensity-bar">
+                            <div class="intensity-fill" id="intensityFill"></div>
+                        </div>
+                        <span id="intensityLabel">Neutral</span>
+                    </div>
+                </div>
+
+                <!-- Journal Prompts -->
+                <div class="journal-prompts">
+                    <h3>Need inspiration?</h3>
+                    <div class="prompt-carousel">
+                        <button class="prompt-nav prev" id="prevPrompt">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="prompt-content">
+                            <p id="currentPrompt">What made you smile today?</p>
+                        </div>
+                        <button class="prompt-nav next" id="nextPrompt">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <button class="use-prompt-btn" id="usePromptBtn">Use This Prompt</button>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="submit-entry-btn" id="submitEntryBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    Create Journal Entry
+                </button>
+            </section>
+
+            <!-- Navigation Tabs -->
+            <nav class="tab-navigation">
+                <button class="tab-btn active" data-tab="recent">Recent Entries</button>
+                <button class="tab-btn" data-tab="insights">AI Insights</button>
+                <button class="tab-btn" data-tab="affirmations">Affirmations</button>
+                <button class="tab-btn" data-tab="patterns">Patterns</button>
+            </nav>
+
+            <!-- Recent Entries Tab -->
+            <section class="tab-content active" id="recentTab">
+                <div class="entries-header">
+                    <h3>Your Journal Entries</h3>
+                    <div class="filter-controls">
+                        <select id="emotionFilter">
+                            <option value="all">All Emotions</option>
+                            <option value="joy">Joy</option>
+                            <option value="sadness">Sadness</option>
+                            <option value="anger">Anger</option>
+                            <option value="fear">Fear</option>
+                            <option value="surprise">Surprise</option>
+                            <option value="love">Love</option>
+                        </select>
+                        <select id="timeFilter">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="entries-list" id="entriesList">
+                    <!-- Entries will be loaded here -->
+                </div>
+            </section>
+
+            <!-- AI Insights Tab -->
+            <section class="tab-content" id="insightsTab">
+                <div class="insights-header">
+                    <h3>AI-Generated Insights</h3>
+                    <button class="refresh-insights-btn" id="refreshInsightsBtn">
+                        <i class="fas fa-sync-alt"></i>
+                        Refresh Insights
+                    </button>
+                </div>
+                <div class="insights-grid" id="insightsGrid">
+                    <!-- Insights will be generated here -->
+                </div>
+            </section>
+
+            <!-- Affirmations Tab -->
+            <section class="tab-content" id="affirmationsTab">
+                <div class="affirmations-header">
+                    <h3>Personalized Affirmations</h3>
+                    <button class="generate-affirmations-btn" id="generateAffirmationsBtn">
+                        <i class="fas fa-magic"></i>
+                        Generate New Affirmations
+                    </button>
+                </div>
+                <div class="affirmations-list" id="affirmationsList">
+                    <!-- Affirmations will be generated here -->
+                </div>
+            </section>
+
+            <!-- Patterns Tab -->
+            <section class="tab-content" id="patternsTab">
+                <div class="patterns-header">
+                    <h3>Emotional Patterns</h3>
+                    <div class="pattern-timeframe">
+                        <button class="timeframe-btn active" data-timeframe="week">Week</button>
+                        <button class="timeframe-btn" data-timeframe="month">Month</button>
+                        <button class="timeframe-btn" data-timeframe="year">Year</button>
+                    </div>
+                </div>
+                <div class="patterns-content" id="patternsContent">
+                    <!-- Pattern analysis will be displayed here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Entry Detail Modal -->
+    <div class="modal" id="entryModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Journal Entry</h3>
+                <button class="close-btn" id="closeEntryModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="entry-detail" id="entryDetail">
+                    <!-- Entry details will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insight Detail Modal -->
+    <div class="modal" id="insightModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Insight Details</h3>
+                <button class="close-btn" id="closeInsightModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="insight-detail" id="insightDetail">
+                    <!-- Insight details will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal" id="exportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Journal</h3>
+                <button class="close-btn" id="closeExportModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <h4>Export Format</h4>
+                    <div class="format-options">
+                        <label class="format-option">
+                            <input type="radio" name="exportFormat" value="pdf" checked>
+                            <span>PDF Document</span>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="exportFormat" value="txt">
+                            <span>Text File</span>
+                        </label>
+                        <label class="format-option">
+                            <input type="radio" name="exportFormat" value="json">
+                            <span>JSON Data</span>
+                        </label>
+                    </div>
+                    
+                    <h4>Date Range</h4>
+                    <div class="date-range">
+                        <input type="date" id="exportStartDate">
+                        <span>to</span>
+                        <input type="date" id="exportEndDate">
+                    </div>
+                    
+                    <div class="export-options-checkboxes">
+                        <label>
+                            <input type="checkbox" id="includeEmotions" checked>
+                            Include emotion analysis
+                        </label>
+                        <label>
+                            <input type="checkbox" id="includeInsights" checked>
+                            Include AI insights
+                        </label>
+                    </div>
+                    
+                    <button class="export-download-btn" id="exportDownloadBtn">
+                        <i class="fas fa-download"></i>
+                        Download Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Processing Modal -->
+    <div class="modal" id="processingModal">
+        <div class="modal-content small">
+            <div class="modal-body">
+                <div class="processing-content">
+                    <div class="spinner"></div>
+                    <h3 id="processingTitle">Processing...</h3>
+                    <p id="processingMessage">Analyzing your journal entry</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/smart-journal.js"></script>
+</body>
+</html>

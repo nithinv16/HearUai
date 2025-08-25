@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Companion Chat - HearUAI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/companion.css">
+</head>
+<body class="companion-mode">
+  <div class="chat-container companion-container">
+    <!-- Header -->
+    <div class="chat-header companion-header">
+      <div class="header-left">
+        <button class="back-btn" onclick="window.location.href='index.html'">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="companion-info">
+          <div class="companion-avatar">
+            <i class="fas fa-heart"></i>
+          </div>
+          <div class="companion-details">
+            <h3 id="companion-name">Your Companion</h3>
+            <span class="companion-status">Always here for you ❤️</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="settings-btn" onclick="companionChat.showSettings()">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages companion-messages" id="chatMessages">
+      <div class="welcome-message">
+        <div class="companion-avatar-large">
+          <i class="fas fa-heart"></i>
+        </div>
+        <h2>Hey beautiful! 💕</h2>
+        <p>I'm so happy you're here. I've been thinking about you... How was your day, sweetheart?</p>
+      </div>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div class="typing-indicator companion-typing" id="typingIndicator" style="display: none;">
+      <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span class="typing-text">Your companion is typing...</span>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input companion-input">
+      <div class="input-container">
+        <input type="text" id="messageInput" placeholder="Tell me what's on your mind, love..." autocomplete="off">
+        <button class="voice-btn" id="voiceBtn" onclick="companionChat.toggleVoiceMode()">
+          <i class="fas fa-microphone"></i>
+        </button>
+        <button class="send-btn" id="sendBtn" onclick="companionChat.sendMessage()">
+          <i class="fas fa-heart"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content companion-modal">
+      <div class="modal-header">
+        <h3>Companion Settings</h3>
+        <button class="close-btn" onclick="companionChat.closeSettings()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-group">
+          <label for="companionName">Companion Name:</label>
+          <input type="text" id="companionName" placeholder="Enter a name for your companion">
+        </div>
+        <div class="setting-group">
+          <label for="companionPersonality">Personality Style:</label>
+          <select id="companionPersonality">
+            <option value="romantic">Romantic & Sweet</option>
+            <option value="playful">Playful & Flirty</option>
+            <option value="caring">Caring & Nurturing</option>
+            <option value="passionate">Passionate & Intense</option>
+          </select>
+        </div>
+        <div class="setting-group">
+          <label for="companionGender">Companion Gender:</label>
+          <select id="companionGender">
+            <option value="adaptive">Adaptive (Based on your preference)</option>
+            <option value="masculine">Masculine</option>
+            <option value="feminine">Feminine</option>
+            <option value="neutral">Gender Neutral</option>
+          </select>
+        </div>
+        <div class="setting-group">
+          <label for="intimacyLevel">Intimacy Level:</label>
+          <select id="intimacyLevel">
+            <option value="sweet">Sweet & Innocent</option>
+            <option value="flirty">Flirty & Playful</option>
+            <option value="romantic">Romantic & Passionate</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="companionChat.saveSettings()">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/azure-ai.js"></script>
+  <script src="js/azure-translation.js"></script>
+  <script src="js/memory.js"></script>
+  <script src="js/memory-layers.js"></script>
+  <script src="js/conversation-history.js"></script>
+  <script src="js/chat-reference.js"></script>
+  <script src="js/companion-chat.js"></script>
+</body>
+</html>

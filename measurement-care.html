@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Measurement-Based Care - HearuAI</title>
+    <link rel="stylesheet" href="css/measurement-care.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <button class="back-btn" onclick="window.history.back()">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h1>Measurement-Based Care</h1>
+            <button class="menu-btn" id="menuBtn">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+        </header>
+
+        <main class="main-content">
+            <!-- Assessment Dashboard -->
+            <section class="assessment-dashboard">
+                <div class="dashboard-card">
+                    <div class="dashboard-header">
+                        <h2>Your Mental Health Journey</h2>
+                        <div class="last-assessment">
+                            <i class="fas fa-clock"></i>
+                            <span>Last assessment: 3 days ago</span>
+                        </div>
+                    </div>
+                    
+                    <div class="current-scores">
+                        <div class="score-item depression">
+                            <div class="score-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="score-content">
+                                <h3>Depression (PHQ-9)</h3>
+                                <div class="score-value">
+                                    <span class="score">8</span>
+                                    <span class="severity mild">Mild</span>
+                                </div>
+                                <div class="score-trend improving">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span>-3 from last week</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="score-item anxiety">
+                            <div class="score-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="score-content">
+                                <h3>Anxiety (GAD-7)</h3>
+                                <div class="score-value">
+                                    <span class="score">12</span>
+                                    <span class="severity moderate">Moderate</span>
+                                </div>
+                                <div class="score-trend stable">
+                                    <i class="fas fa-minus"></i>
+                                    <span>No change</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="quick-actions">
+                        <button class="btn-primary" id="startAssessmentBtn">
+                            <i class="fas fa-clipboard-check"></i>
+                            Take Assessment
+                        </button>
+                        <button class="btn-secondary" id="viewTrendsBtn">
+                            <i class="fas fa-chart-line"></i>
+                            View Trends
+                        </button>
+                        <button class="btn-secondary" id="shareResultsBtn">
+                            <i class="fas fa-share"></i>
+                            Share with Provider
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Assessment Selection -->
+            <section class="assessment-selection" id="assessmentSelection" style="display: none;">
+                <div class="selection-card">
+                    <h3>Choose Your Assessment</h3>
+                    <p>Select which assessment you'd like to take today. Both take about 2-3 minutes.</p>
+                    
+                    <div class="assessment-options">
+                        <div class="assessment-option" data-type="phq9">
+                            <div class="option-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="option-content">
+                                <h4>PHQ-9 Depression Screening</h4>
+                                <p>9 questions about your mood and feelings over the past 2 weeks</p>
+                                <div class="option-meta">
+                                    <span><i class="fas fa-clock"></i> 2-3 minutes</span>
+                                    <span><i class="fas fa-questions"></i> 9 questions</span>
+                                </div>
+                            </div>
+                            <div class="option-action">
+                                <button class="btn-start">Start</button>
+                            </div>
+                        </div>
+                        
+                        <div class="assessment-option" data-type="gad7">
+                            <div class="option-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="option-content">
+                                <h4>GAD-7 Anxiety Screening</h4>
+                                <p>7 questions about anxiety and worry over the past 2 weeks</p>
+                                <div class="option-meta">
+                                    <span><i class="fas fa-clock"></i> 2 minutes</span>
+                                    <span><i class="fas fa-questions"></i> 7 questions</span>
+                                </div>
+                            </div>
+                            <div class="option-action">
+                                <button class="btn-start">Start</button>
+                            </div>
+                        </div>
+                        
+                        <div class="assessment-option" data-type="both">
+                            <div class="option-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="option-content">
+                                <h4>Complete Assessment</h4>
+                                <p>Take both PHQ-9 and GAD-7 for a comprehensive evaluation</p>
+                                <div class="option-meta">
+                                    <span><i class="fas fa-clock"></i> 4-5 minutes</span>
+                                    <span><i class="fas fa-questions"></i> 16 questions</span>
+                                </div>
+                            </div>
+                            <div class="option-action">
+                                <button class="btn-start recommended">Recommended</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-back" id="backToDashboard">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                </div>
+            </section>
+
+            <!-- Conversational Assessment -->
+            <section class="conversational-assessment" id="conversationalAssessment" style="display: none;">
+                <div class="assessment-card">
+                    <div class="assessment-header">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="currentQuestion">1</span> of <span id="totalQuestions">9</span>
+                        </div>
+                    </div>
+                    
+                    <div class="conversation-area">
+                        <div class="ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="conversation-content">
+                            <div class="ai-message" id="questionText">
+                                Let's start with how you've been feeling lately. Over the last 2 weeks, how often have you been bothered by little interest or pleasure in doing things?
+                            </div>
+                            
+                            <div class="response-options" id="responseOptions">
+                                <button class="response-btn" data-value="0">
+                                    <span class="response-text">Not at all</span>
+                                    <span class="response-score">0</span>
+                                </button>
+                                <button class="response-btn" data-value="1">
+                                    <span class="response-text">Several days</span>
+                                    <span class="response-score">1</span>
+                                </button>
+                                <button class="response-btn" data-value="2">
+                                    <span class="response-text">More than half the days</span>
+                                    <span class="response-score">2</span>
+                                </button>
+                                <button class="response-btn" data-value="3">
+                                    <span class="response-text">Nearly every day</span>
+                                    <span class="response-score">3</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="assessment-actions">
+                        <button class="btn-secondary" id="pauseAssessment">
+                            <i class="fas fa-pause"></i>
+                            Pause
+                        </button>
+                        <button class="btn-secondary" id="previousQuestion" disabled>
+                            <i class="fas fa-arrow-left"></i>
+                            Previous
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="assessment-results" id="assessmentResults" style="display: none;">
+                <div class="results-card">
+                    <div class="results-header">
+                        <div class="completion-badge">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Assessment Complete</span>
+                        </div>
+                        <div class="completion-time">
+                            Completed in <span id="completionTime">2 minutes 34 seconds</span>
+                        </div>
+                    </div>
+                    
+                    <div class="results-summary" id="resultsSummary">
+                        <!-- Results will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="results-insights">
+                        <h3>Personalized Insights</h3>
+                        <div class="insight-list" id="insightList">
+                            <!-- Insights will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="results-actions">
+                        <button class="btn-primary" id="saveResults">
+                            <i class="fas fa-save"></i>
+                            Save Results
+                        </button>
+                        <button class="btn-secondary" id="scheduleFollowUp">
+                            <i class="fas fa-calendar-plus"></i>
+                            Schedule Follow-up
+                        </button>
+                        <button class="btn-secondary" id="viewDetailedReport">
+                            <i class="fas fa-file-alt"></i>
+                            Detailed Report
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trends Visualization -->
+            <section class="trends-visualization" id="trendsVisualization" style="display: none;">
+                <div class="trends-card">
+                    <div class="trends-header">
+                        <h3>Your Progress Over Time</h3>
+                        <div class="time-range-selector">
+                            <button class="time-btn active" data-range="1m">1M</button>
+                            <button class="time-btn" data-range="3m">3M</button>
+                            <button class="time-btn" data-range="6m">6M</button>
+                            <button class="time-btn" data-range="1y">1Y</button>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="trendsChart" width="800" height="400"></canvas>
+                    </div>
+                    
+                    <div class="trends-insights">
+                        <div class="trend-stat">
+                            <div class="stat-icon improving">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4>Depression Trend</h4>
+                                <p>25% improvement over 3 months</p>
+                            </div>
+                        </div>
+                        
+                        <div class="trend-stat">
+                            <div class="stat-icon stable">
+                                <i class="fas fa-minus"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4>Anxiety Trend</h4>
+                                <p>Stable with minor fluctuations</p>
+                            </div>
+                        </div>
+                        
+                        <div class="trend-stat">
+                            <div class="stat-icon milestone">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h4>Milestone Reached</h4>
+                                <p>Moved from moderate to mild depression</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-back" id="backFromTrends">
+                        <i class="fas fa-arrow-left"></i>
+                        Back to Dashboard
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Menu Dropdown -->
+        <div class="menu-dropdown" id="menuDropdown">
+            <div class="menu-item" id="exportData">
+                <i class="fas fa-download"></i>
+                <span>Export Data</span>
+            </div>
+            <div class="menu-item" id="assessmentHistory">
+                <i class="fas fa-history"></i>
+                <span>Assessment History</span>
+            </div>
+            <div class="menu-item" id="reminderSettings">
+                <i class="fas fa-bell"></i>
+                <span>Reminder Settings</span>
+            </div>
+            <div class="menu-item" id="privacySettings">
+                <i class="fas fa-shield-alt"></i>
+                <span>Privacy Settings</span>
+            </div>
+        </div>
+
+        <!-- Assessment History Modal -->
+        <div class="modal" id="historyModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Assessment History</h3>
+                    <button class="close-btn" onclick="closeModal('historyModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="history-list" id="historyList">
+                        <!-- History items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reminder Settings Modal -->
+        <div class="modal" id="reminderModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Assessment Reminders</h3>
+                    <button class="close-btn" onclick="closeModal('reminderModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="reminder-settings">
+                        <div class="setting-group">
+                            <label>
+                                <input type="checkbox" id="enableReminders" checked>
+                                Enable assessment reminders
+                            </label>
+                        </div>
+                        <div class="setting-group">
+                            <label for="reminderFrequency">Reminder Frequency:</label>
+                            <select id="reminderFrequency">
+                                <option value="weekly">Weekly</option>
+                                <option value="biweekly" selected>Every 2 weeks</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label for="reminderTime">Preferred Time:</label>
+                            <input type="time" id="reminderTime" value="19:00">
+                        </div>
+                        <div class="setting-group">
+                            <label for="reminderDays">Reminder Days:</label>
+                            <div class="day-selector">
+                                <label><input type="checkbox" value="1"> Mon</label>
+                                <label><input type="checkbox" value="2"> Tue</label>
+                                <label><input type="checkbox" value="3" checked> Wed</label>
+                                <label><input type="checkbox" value="4"> Thu</label>
+                                <label><input type="checkbox" value="5"> Fri</label>
+                                <label><input type="checkbox" value="6"> Sat</label>
+                                <label><input type="checkbox" value="0"> Sun</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal('reminderModal')">Cancel</button>
+                    <button class="btn-primary" onclick="saveReminderSettings()">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Share Results Modal -->
+        <div class="modal" id="shareModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Share with Healthcare Provider</h3>
+                    <button class="close-btn" onclick="closeModal('shareModal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="share-options">
+                        <div class="share-option">
+                            <div class="option-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="option-content">
+                                <h4>Email Report</h4>
+                                <p>Send a comprehensive report to your healthcare provider</p>
+                                <input type="email" placeholder="Provider's email address" id="providerEmail">
+                            </div>
+                        </div>
+                        
+                        <div class="share-option">
+                            <div class="option-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <div class="option-content">
+                                <h4>Download PDF</h4>
+                                <p>Download a PDF report to share during your appointment</p>
+                                <button class="btn-download">Download Report</button>
+                            </div>
+                        </div>
+                        
+                        <div class="share-option">
+                            <div class="option-icon">
+                                <i class="fas fa-qrcode"></i>
+                            </div>
+                            <div class="option-content">
+                                <h4>QR Code</h4>
+                                <p>Generate a secure QR code for quick access to your results</p>
+                                <div class="qr-placeholder">
+                                    <i class="fas fa-qrcode"></i>
+                                    <span>QR Code will appear here</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" onclick="closeModal('shareModal')">Cancel</button>
+                    <button class="btn-primary" onclick="sendReport()">Send Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/measurement-care.js"></script>
+</body>
+</html>

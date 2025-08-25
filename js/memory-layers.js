@@ -151,6 +151,7 @@ class EmotionalMemory {
     this.progressMetrics = {};
     this.moodHistory = [];
     this.emotionalGoals = [];
+    this.journalEntries = [];
   }
 
   async load() {
@@ -162,7 +163,8 @@ class EmotionalMemory {
         triggers: {},
         progressMetrics: {},
         moodHistory: [],
-        emotionalGoals: []
+        emotionalGoals: [],
+        journalEntries: []
       };
       this.emotions = data.emotions || [];
       this.patterns = data.patterns || {};
@@ -170,6 +172,7 @@ class EmotionalMemory {
       this.progressMetrics = data.progressMetrics || {};
       this.moodHistory = data.moodHistory || [];
       this.emotionalGoals = data.emotionalGoals || [];
+      this.journalEntries = data.journalEntries || [];
     } catch (error) {
       console.error('Error loading emotional memory:', error);
       this.emotions = [];
@@ -178,6 +181,7 @@ class EmotionalMemory {
       this.progressMetrics = {};
       this.moodHistory = [];
       this.emotionalGoals = [];
+      this.journalEntries = [];
     }
   }
 
@@ -992,8 +996,233 @@ class EmotionalMemory {
     localStorage.removeItem(this.storageKey);
   }
 
+  // Journal Entry Management
+  async storeJournalEntry(entry) {
+    const journalEntry = {
+      id: this.generateJournalId(),
+      content: entry.content,
+      prompt: entry.prompt || null,
+      type: entry.type || 'free_form', // free_form, guided, cbt, dbt, reflection
+      mood: entry.mood || null,
+      emotions: entry.emotions || [],
+      tags: entry.tags || [],
+      timestamp: entry.timestamp || new Date().toISOString(),
+      sessionId: entry.sessionId || null,
+      aiAnalysis: null, // Will be populated by AI analysis
+      insights: [],
+      patterns: []
+    };
+
+    this.journalEntries.push(journalEntry);
+    
+    // Keep only recent journal entries (last 500 entries)
+    if (this.journalEntries.length > 500) {
+      this.journalEntries = this.journalEntries.slice(-500);
+    }
+
+    await this.save();
+    return journalEntry;
+  }
+
+  async getJournalEntries(options = {}) {
+    const {
+      limit = 20,
+      type = null,
+      dateRange = null,
+      tags = null,
+      sortBy = 'timestamp',
+      sortOrder = 'desc'
+    } = options;
+
+    let entries = [...this.journalEntries];
+
+    // Filter by type
+    if (type) {
+      entries = entries.filter(entry => entry.type === type);
+    }
+
+    // Filter by tags
+    if (tags && tags.length > 0) {
+      entries = entries.filter(entry => 
+        tags.some(tag => entry.tags.includes(tag))
+      );
+    }
+
+    // Filter by date range
+    if (dateRange) {
+      const { start, end } = dateRange;
+      entries = entries.filter(entry => {
+        const entryDate = new Date(entry.timestamp);
+        return entryDate >= new Date(start) && entryDate <= new Date(end);
+      });
+    }
+
+    // Sort entries
+    entries.sort((a, b) => {
+      const aValue = a[sortBy];
+      const bValue = b[sortBy];
+      
+      if (sortOrder === 'desc') {
+        return new Date(bValue) - new Date(aValue);
+      } else {
+        return new Date(aValue) - new Date(bValue);
+      }
+    });
+
+    return entries.slice(0, limit);
+  }
+
+  async updateJournalEntry(entryId, updates) {
+    const entryIndex = this.journalEntries.findIndex(entry => entry.id === entryId);
+    if (entryIndex !== -1) {
+      this.journalEntries[entryIndex] = {
+        ...this.journalEntries[entryIndex],
+        ...updates,
+        updatedAt: new Date().toISOString()
+      };
+      await this.save();
+      return this.journalEntries[entryIndex];
+    }
+    return null;
+  }
+
+  async deleteJournalEntry(entryId) {
+    const entryIndex = this.journalEntries.findIndex(entry => entry.id === entryId);
+    if (entryIndex !== -1) {
+      const deletedEntry = this.journalEntries.splice(entryIndex, 1)[0];
+      await this.save();
+      return deletedEntry;
+    }
+    return null;
+  }
+
+  async analyzeJournalPatterns() {
+    const patterns = {
+      emotionalTrends: {},
+      commonThemes: {},
+      moodProgression: [],
+      writingFrequency: {},
+      insightfulEntries: []
+    };
+
+    // Analyze emotional trends
+    this.journalEntries.forEach(entry => {
+      if (entry.emotions && entry.emotions.length > 0) {
+        entry.emotions.forEach(emotion => {
+          patterns.emotionalTrends[emotion] = (patterns.emotionalTrends[emotion] || 0) + 1;
+        });
+      }
+
+      // Track mood progression
+      if (entry.mood) {
+        patterns.moodProgression.push({
+          date: entry.timestamp,
+          mood: entry.mood
+        });
+      }
+
+      // Track writing frequency
+      const date = new Date(entry.timestamp).toDateString();
+      patterns.writingFrequency[date] = (patterns.writingFrequency[date] || 0) + 1;
+
+      // Identify insightful entries (longer entries with emotional depth)
+      if (entry.content.length > 200 && entry.emotions.length > 2) {
+        patterns.insightfulEntries.push({
+          id: entry.id,
+          timestamp: entry.timestamp,
+          preview: entry.content.substring(0, 100) + '...',
+          emotionCount: entry.emotions.length
+        });
+      }
+    });
+
+    return patterns;
+  }
+
+  async searchJournalEntries(query) {
+    const searchTerms = query.toLowerCase().split(' ');
+    
+    return this.journalEntries.filter(entry => {
+      const content = entry.content.toLowerCase();
+      const tags = entry.tags.join(' ').toLowerCase();
+      const emotions = entry.emotions.join(' ').toLowerCase();
+      
+      return searchTerms.some(term => 
+        content.includes(term) || 
+        tags.includes(term) || 
+        emotions.includes(term)
+      );
+    }).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }
+
+  getJournalInsights() {
+    const totalEntries = this.journalEntries.length;
+    if (totalEntries === 0) return null;
+
+    const recentEntries = this.journalEntries
+      .filter(entry => {
+        const entryDate = new Date(entry.timestamp);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        return entryDate >= thirtyDaysAgo;
+      });
+
+    const avgWordsPerEntry = this.journalEntries.reduce((sum, entry) => 
+      sum + entry.content.split(' ').length, 0) / totalEntries;
+
+    const mostCommonEmotions = {};
+    this.journalEntries.forEach(entry => {
+      entry.emotions.forEach(emotion => {
+        mostCommonEmotions[emotion] = (mostCommonEmotions[emotion] || 0) + 1;
+      });
+    });
+
+    const topEmotions = Object.entries(mostCommonEmotions)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([emotion, count]) => ({ emotion, count }));
+
+    return {
+      totalEntries,
+      recentEntries: recentEntries.length,
+      avgWordsPerEntry: Math.round(avgWordsPerEntry),
+      topEmotions,
+      longestEntry: this.journalEntries.reduce((longest, entry) => 
+        entry.content.length > longest.content.length ? entry : longest, 
+        { content: '' }
+      ),
+      writingStreak: this.calculateWritingStreak()
+    };
+  }
+
+  calculateWritingStreak() {
+    const today = new Date();
+    let streak = 0;
+    let currentDate = new Date(today);
+
+    while (true) {
+      const dateString = currentDate.toDateString();
+      const hasEntry = this.journalEntries.some(entry => 
+        new Date(entry.timestamp).toDateString() === dateString
+      );
+
+      if (hasEntry) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    return streak;
+  }
+
+  generateJournalId() {
+    return 'journal_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+
   generateId() {
-    return 'em_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    return 'emotion_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 }
 
